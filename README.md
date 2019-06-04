@@ -26,6 +26,13 @@
 <br>
 
 ### Usage:
+
+Download the .tar file & place it inside '/var/theos/templates/ios' & then run nic.pl to create a project <br>
+If you want to customize the template, download the github project & copy the "project" folder on your phone. <br>
+Make the changes you want, cd into your project & run this command: '/var/theos/bin/nicify.pl ./'. <br>
+This will create a new .tar file inside the folder, place this in '/var/theos/templates/ios'. <br>
+
+
 <b> Offset Patcher Switch: </b>
 ```obj-c
   [switches addOffsetSwitch:@"One Hit Kill"
