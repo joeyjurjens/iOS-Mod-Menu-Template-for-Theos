@@ -56,33 +56,35 @@
 ```
 <b> Checking if a switch is on:
 ```obj-c
-	bool isOn = [switches isSwitchOn:@"Switch Name Goes Here"];
+bool isOn = [switches isSwitchOn:@"Switch Name Goes Here"];
     
-    if(isOn) {
-    	//Do stuff
-    }
+if(isOn) {
+	//Do stuff
+}
     
-    //Or check directly:
-    if([switches isSwitchOn:@"Switch Name Goes Here"]) {
-    	// Do stuff
-    }
+//Or check directly:
+if([switches isSwitchOn:@"Switch Name Goes Here"]) {
+    // Do stuff
+}
 ```
 <b> Getting textfield or slider value: </b>
 ```obj-c
-	int userValue = [[switches getValueFromSwitch:@"Switch Name Goes Here"] intValue];
-    float userValue2 = [[switches getValueFromSwitch:@"Switch Name Goes Here"] floatValue];
+int userValue = [[switches getValueFromSwitch:@"Switch Name Goes Here"] intValue];
+float userValue2 = [[switches getValueFromSwitch:@"Switch Name Goes Here"] floatValue];
 ```
 
 <br>
 The sample.xm in the project shows an example project.
 <br>
 <br>
+
 ### To Do:
 * Re-design the textfield UI, I'm not a fan of it.
 * Numeric Keyboard only with textfield
 * You tell me!
 
 <br>
+
 ### Contact:
 If you have any questions, suggestions, bugs or anything else:
 <br> <b>Discord:</b> Joey #0309
