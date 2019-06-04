@@ -24,6 +24,7 @@
 	* Open Source --> want something changed? Do it!
 
 <br>
+
 ### Usage:
 <b> Offset Patcher Switch: </b>
 ```obj-c
