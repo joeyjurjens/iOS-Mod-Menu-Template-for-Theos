@@ -1,0 +1,10 @@
+Package: @@PACKAGENAME@@
+Name: @@APPNAME@@ Mod Menu
+Depends: mobilesubstrate
+Version: @@APPVERSION@@
+Architecture: iphoneos-arm
+Description: @@APPNAME@@ Mod Menu by @@USER@@!
+Maintainer: @@USER@@
+Author: @@USER@@
+Section: Tweaks
+Homepage: @@SITE@@

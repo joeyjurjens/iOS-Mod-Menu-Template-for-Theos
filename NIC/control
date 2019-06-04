@@ -1,0 +1,5 @@
+name "Ted2's Mod Menu Template"
+prompt FILTER "Bundle filter" "com.company.appname"
+constrain file "control" to package
+constrain "theos" to link_theos
+

@@ -1,0 +1,16 @@
+The icon are both 50 * 50. 
+
+If you want to change them, I would suggest loading both images in a image editor.
+After that, you can just load your image over it & if needed, erase mine with a eraser.
+
+Tips:
+
+1. Make sure your background is transparant, otherwise it won't look good.
+
+2. If the height & width doesn't look good, you can change it in Menu.mm file
+  - For the menu icon:
+    - On line 85, you see two times "50", the first one is width & the last one is height.
+
+  - For the menu button:
+    - On line 230, you see two times "50", the first one is width & the last one is height. 
+
