@@ -175,7 +175,7 @@ void restoreLastSession() {
             // get the offsets for the switch
             std::vector<uint64_t> offsets = [op getOffsets];
             // get the bytes for the switch
-            std::vector<const void *>bytes = [op getBytes];
+            std::vector<uint64_t>bytes = [op getBytes];
             //get the memorypatch for the switch
             std::vector<MemoryPatch> memoryPatches = [op getMemoryPatches];
             
@@ -291,7 +291,7 @@ void restoreLastSession() {
     
     // get offsets, bytes & the according memory patch.
     std::vector<uint64_t> offsets = [offsetPatcher getOffsets];
-    std::vector<const void *>bytes = [offsetPatcher getBytes];
+    std::vector<uint64_t>bytes = [offsetPatcher getBytes];
     std::vector<MemoryPatch> memoryPatches = [offsetPatcher getMemoryPatches];
     
     bool isOn = [defaults boolForKey:[offsetPatcher getPreferencesKey]];
@@ -415,21 +415,29 @@ void restoreLastSession() {
 @implementation OffsetPatcher {
     NSString *preferencesKey;
     std::vector<uint64_t> offsets;
-    std::vector<const void *> bytes;
+    std::vector<uint64_t> bytes;
     std::vector<MemoryPatch> memoryPatches;
     UILabel *offsetPatchSwitch;
     NSString *description;
 }
 
-- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<const void *>)bytes_ {
+- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_ {
     
     offsets = offsets_;
     bytes = bytes_;
     description = description_;
 
     // add memory patch to memorypatches vector array
+    // add memory patch to memorypatches vector array
     for(int i = 0; i < offsets.size(); i++) {
-        memoryPatches.push_back(MemoryPatch(NULL,offsets[i], bytes[i], sizeof(bytes[i]) / sizeof(const void *)));
+
+        if(findBytes(bytes[i]) == 8) {
+            bytes[i] = _OSSwapInt64(bytes[i]);
+        } else {
+            bytes[i] = _OSSwapInt32(bytes[i]);
+        }
+
+        memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], findBytes(bytes[i])));
     }
     
     preferencesKey = hackName_;
@@ -481,12 +489,12 @@ void restoreLastSession() {
     return offsets;
 }
 
-- (std::vector<const void*>)getBytes {
+- (std::vector<uint64_t>)getBytes {
     return bytes;
 }
 
 - (std::vector<MemoryPatch>)getMemoryPatches {
-return memoryPatches;
+    return memoryPatches;
 }
 
 @end //end of OffsetPatcher class

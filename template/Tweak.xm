@@ -1,7 +1,15 @@
 #import "Macros.h"
 
+/**********************************
 
+INSIDE THIS FUNCTION YOU'LL HAVE TO CREATE YOUR SWITCHES!
+
+***********************************/
 void setup() {
+
+  //patching offsets directly, without switch.
+  patchOffset(0x1002DB3C8, 0xC0035FD6);
+  patchOffset(0x10020D2D3, 0x00008052C0035FD6);
 
   // Empty switch - usefull with hooking!
   [switches addSwitch:@"Anti Ban"
@@ -11,15 +19,13 @@ void setup() {
   [switches addOffsetSwitch:@"God Mode"
               description:@"You can't die!"
                 offsets:{0x1005AB148}
-                  // Get bytes here: http://shell-storm.org/online/Online-Assembler-and-Disassembler/
-                  bytes:{"\x00\xe0\xbf\x12\xc0\x03\x5f\xd6"}];
+                  bytes:{0x00E0BF12C0035FD6}];
 
   // Offset switch with multiply patches
   [switches addOffsetSwitch:@"One Hit Kill"
-              description:@"You can't die!"
+              description:@"Enemy will die instantly!"
                 offsets:{0x1001BB2C0, 0x1002CB3B0}
-                  // Get Bytes Here: http://shell-storm.org/online/Online-Assembler-and-Disassembler/
-                  bytes:{"\x00\xe0\xbf\x12\xc0\x03\x5f\xd6", "\xc0\x03\x5f\xd6"}];
+                  bytes:{0x00E0BF12C0035FD6, 0xC0035FD6}];
 
   // Textfield Switch - used in hooking!
   [switches addTextfieldSwitch:@"Custom Gold: "
@@ -35,7 +41,7 @@ void setup() {
 }
 
 
-/*
+/**********************************************************************************************************
      
      You can customize the menu here
      Good site for specific UIColor: https://www.uicolor.xyz/#/rgb-to-ui
@@ -45,13 +51,13 @@ void setup() {
 
      See comment next to maxVisibleSwitches!!!!
      
-*/
+************************************************************************************************************/
 void setupMenu() {
 
   menu = [[Menu alloc]  initWithTitle:@"@@APPNAME@@ - Mod Menu"
                         titleColor:[UIColor whiteColor]
                         titleFont:@"Copperplate-Bold"
-                        credits:@"This Mod Menu has been made by @@USER@@, do not share this without proper credits or my permission. \nEnjoy!"
+                        credits:@"This Mod Menu has been made by @@USER@@, do not share this without proper credits or my permission. \n\nEnjoy!"
                         headerColor:[UIColor colorWithRed:0.74 green:0.00 blue:0.00 alpha:1.0]
                         switchOffColor:[UIColor darkGrayColor]
                         switchOnColor:[UIColor colorWithRed:0.00 green:0.68 blue:0.95 alpha:1.0]
@@ -62,7 +68,7 @@ void setupMenu() {
                         menuWidth:250];    
 
 
-    //once menu has been initialized, run the setup functions (here you'll generate the switches).
+    //once menu has been initialized, it will run the setup functions. In the setup function, you create your switches!
     setup();
 }
 

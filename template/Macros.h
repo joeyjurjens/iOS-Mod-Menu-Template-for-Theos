@@ -22,3 +22,15 @@ static Switches *switches = [[Switches alloc]init];
 uint64_t getRealOffset(uint64_t offset){
 	return _dyld_get_image_vmaddr_slide(0) + offset;
 }
+
+/*
+	Patching a offset without switch.
+*/
+bool patchOffset(uint64_t offset, uint64_t data) {
+	if(findBytes(data) == 8) {
+		data = _OSSwapInt64(data);
+	} else {
+		data = _OSSwapInt32(data);
+	}	
+	return MemoryPatch(NULL,offset, &data, findBytes(data)).Modify();
+}

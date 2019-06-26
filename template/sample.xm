@@ -99,8 +99,7 @@ void setup() {
     [switches addOffsetSwitch:@"No Shity Ads"
                 description:@"Title says it all ^_^"
                   offsets:{0x10184866C}
-                    // Get Bytes Here: http://shell-storm.org/online/Online-Assembler-and-Disassembler/
-                    bytes:{"\x20\x00\x80\x52\xc0\x03\x5f\xd6"}];                  
+                    bytes:{0x20008052C0035FD6}];                  
 
 
 }

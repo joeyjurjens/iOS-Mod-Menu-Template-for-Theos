@@ -32,13 +32,13 @@
 
 @interface OffsetPatcher : UIButton
 
-- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<const void *>)bytes_;
+- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_;
 
 
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
 -(std::vector<uint64_t>)getOffsets;
-- (std::vector<const void*>)getBytes;
+- (std::vector<uint64_t>)getBytes;
 - (std::vector<MemoryPatch>)getMemoryPatches;
 
 

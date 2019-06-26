@@ -17,7 +17,7 @@ static Menu *menu = [[Menu alloc]init];
 -(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_ {
     
     // We can just use the offsetpatcher method, but just not enter any offsets :)
-    OffsetPatcher *offsetPatch = [[OffsetPatcher alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<const void *>{}];
+    OffsetPatcher *offsetPatch = [[OffsetPatcher alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<uint64_t>{}];
     
     //adding it to the menu
     [menu addOffsetSwitchToMenu:offsetPatch];
@@ -28,10 +28,10 @@ static Menu *menu = [[Menu alloc]init];
  This is the "template" for simple offset patching.
  */
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<const void *>)bytes_ {
+- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<uint64_t>)bytes_ {
     
     std::vector<uint64_t> offsetVector;
-    std::vector<const void *> bytesVector;
+    std::vector<uint64_t> bytesVector;
     
     offsetVector.insert(offsetVector.begin(), offsets_.begin(), offsets_.end());
     bytesVector.insert(bytesVector.begin(), bytes_.begin(), bytes_.end());
