@@ -39,8 +39,8 @@ This will create a new .tar file inside the folder, place this in '/var/theos/te
 ```
 
 
-<b> Offset Patcher Switch: </b>
-Note: "Bytes" allow up to <b> two </b> arm instructions per offset, not more. <br>
+<b> Offset Patcher Switch: </b> <br>
+<b> Note </b>: "Bytes" allow up to <b> two </b> arm instructions per offset, not more. <br>
 
 ```obj-c
   [switches addOffsetSwitch:@"One Hit Kill"
