@@ -429,7 +429,7 @@ void restoreLastSession() {
 
     // add memory patch to memorypatches vector array
     for(int i = 0; i < offsets.size(); i++) {
-        memoryPatches.push_back(MemoryPatch(NULL,offsets[i], bytes[i], sizeof(bytes[i])));
+        memoryPatches.push_back(MemoryPatch(NULL,offsets[i], bytes[i], sizeof(bytes[i]) / sizeof(const void *)));
     }
     
     preferencesKey = hackName_;
