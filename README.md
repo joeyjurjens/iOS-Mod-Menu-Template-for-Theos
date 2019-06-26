@@ -19,9 +19,9 @@
 
 * Backend Offset Patcher Switch is based on [KittyMemory](https://github.com/MJx0/KittyMemory)
 	* Original bytes are <b>not</b> required
-	* Write bytes, instead of integers
 	* Supports MSHookMemory
-	* Open Source --> want something changed? Do it!
+
+* Open Source Menu
 
 <br>
 
@@ -32,14 +32,21 @@ If you want to customize the template, download the github project & copy the "p
 Make the changes you want, cd into your project & run this command: '/var/theos/bin/nicify.pl ./'. <br>
 This will create a new .tar file inside the folder, place this in '/var/theos/templates/ios'. <br>
 
+<b> Patching a offset without switch: </b>
+```c
+  patchOffset(0x1002DB3C8, 0xC0035FD6);
+  patchOffset(0x10020D2D3, 0x00008052C0035FD6);
+```
+
 
 <b> Offset Patcher Switch: </b>
+Note: "Bytes" allow up to <b> two </b> arm instructions per offset, not more. <br>
+
 ```obj-c
   [switches addOffsetSwitch:@"One Hit Kill"
-              description:@"You can't die!"
+              description:@"Enemy will die instantly!"
                 offsets:{0x1001BB2C0, 0x1002CB3B0}
-                  // Get Bytes Here: http://shell-storm.org/online/Online-Assembler-and-Disassembler/
-                  bytes:{"\x00\xe0\xbf\x12\xc0\x03\x5f\xd6", "\xc0\x03\x5f\xd6"}];
+                  bytes:{0x00E0BF12C0035FD6, 0xC0035FD6}];
 ```
 
 <b> Empty Switch: </b>
@@ -87,7 +94,7 @@ The sample.xm in the project shows an example project.
 
 ### To Do:
 * Re-design the textfield UI, I'm not a fan of it.
-* Numeric Keyboard only with textfield
+* Offset Tester Switch
 * You tell me!
 
 <br>
@@ -95,6 +102,5 @@ The sample.xm in the project shows an example project.
 ### Contact:
 If you have any questions, suggestions, bugs or anything else:
 <br> <b>Discord:</b> Joey #0309
-<br><b>iOSGods Account:</b> [https://iosgods.com/profile/122392-ted2/](https://iosgods.com/profile/122392-ted2/)
 <br><b>Twitter:</b> [https://twitter.com/Joey_Not_Joey](https://twitter.com/Joey_Not_Joey)
 
