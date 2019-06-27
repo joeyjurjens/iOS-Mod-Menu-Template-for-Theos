@@ -428,16 +428,15 @@ void restoreLastSession() {
     description = description_;
 
     // add memory patch to memorypatches vector array
-    // add memory patch to memorypatches vector array
     for(int i = 0; i < offsets.size(); i++) {
 
-        if(findBytes(bytes[i]) == 8) {
-            bytes[i] = _OSSwapInt64(bytes[i]);
-        } else {
+        if(bytes[i] < 0xFFFFFFFF) {
             bytes[i] = _OSSwapInt32(bytes[i]);
+            memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], sizeof(uint32_t)));
+        } else {
+            bytes[i] = _OSSwapInt64(bytes[i]);
+            memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], sizeof(uint64_t)));
         }
-
-        memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], findBytes(bytes[i])));
     }
     
     preferencesKey = hackName_;

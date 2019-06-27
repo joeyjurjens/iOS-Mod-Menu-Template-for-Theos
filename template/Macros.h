@@ -26,11 +26,12 @@ uint64_t getRealOffset(uint64_t offset){
 /*
 	Patching a offset without switch.
 */
-bool patchOffset(uint64_t offset, uint64_t data) {
-	if(findBytes(data) == 8) {
-		data = _OSSwapInt64(data);
-	} else {
+bool patchOffset(uint64_t offset, unsigned long long data) {
+	if(data < 0xFFFFFFFF) {
 		data = _OSSwapInt32(data);
-	}	
-	return MemoryPatch(NULL,offset, &data, findBytes(data)).Modify();
+		return MemoryPatch(NULL,offset, &data, sizeof(uint32_t)).Modify();
+	} else {
+		data = _OSSwapInt64(data);
+		return MemoryPatch(NULL,offset, &data, sizeof(uint64_t)).Modify();
+	}
 }
