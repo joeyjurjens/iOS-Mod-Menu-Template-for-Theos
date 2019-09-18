@@ -102,5 +102,4 @@ The sample.xm in the project shows an example project.
 ### Contact:
 If you have any questions, suggestions, bugs or anything else:
 <br> <b>Discord:</b> Joey #0309
-<br><b>Twitter:</b> [https://twitter.com/Joey_Not_Joey](https://twitter.com/Joey_Not_Joey)
 

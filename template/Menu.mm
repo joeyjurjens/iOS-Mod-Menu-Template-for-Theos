@@ -649,7 +649,7 @@ void restoreLastSession() {
     sliderValue.maximumTrackTintColor = switchTitleColor;
     sliderValue.minimumValue = minimumValue_;
     sliderValue.maximumValue = maximumValue_;
-    sliderValue.continuous = false;
+    sliderValue.continuous = true;
     [sliderValue addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     valueOfSlider = sliderValue.value;
     
