@@ -32,6 +32,16 @@ If you want to customize the template, download the github project & copy the "p
 Make the changes you want, cd into your project & run this command: '/var/theos/bin/nicify.pl ./'. <br>
 This will create a new .tar file inside the folder, place this in '/var/theos/templates/ios'. <br>
 
+<b> Changing the menu images </b>
+
+Inside tweak.xm, you'll setup the menu under the function "setupMenu". 
+Here you'll see two options under the menu: menuIcon & menuButton, those require a base64 image string.
+In order to get a base64 string from the image, upload the image here: https://www.browserling.com/tools/image-to-base64
+
+Images 50x50 are recommended, you can get a sample of my images by copying the standard(in tweak.xm) base64 string & use this website to show the picture: https://base64.guru/converter/decode/image
+
+
+
 <b> Patching a offset without switch: </b>
 ```c
   patchOffset(0x1002DB3C8, 0xC0035FD6);
@@ -93,9 +103,18 @@ The sample.xm in the project shows an example project.
 <br>
 
 ### To Do:
-* Re-design the textfield UI, I'm not a fan of it.
+* Some kind of string obfuscation/encryption against leeching
 * Offset Tester Switch
 * You tell me!
+
+<br>
+
+### Credits:
+* Me
+* [MJx0](https://github.com/MJx0)
+  * For [KittyMemory](https://github.com/MJx0/KittyMemory)
+* [dogo](https://github.com/dogo)
+  * For [SCLAlertView](https://github.com/dogo/SCLAlertView)
 
 <br>
 

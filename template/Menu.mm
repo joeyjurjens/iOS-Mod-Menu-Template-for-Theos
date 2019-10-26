@@ -18,22 +18,17 @@
 
 // For saving to the pref.plist
 NSUserDefaults *defaults;
-// Scroll view, switches will be added here (subview)
+
 UIScrollView *scrollView;
-// Menu-widht will be saved here, we need this for setting correct positions for switches.
 CGFloat menuWidth;
-// Saving the X value of the scrollview. This also will be used for positions.
 CGFloat scrollViewX;
-// Credits will be stored here, so we can show it on popup & when menu icon has been tapped!
 NSString *credits;
-// Color of a switch when it's on, will be set in the initalization of the menu.
 UIColor *switchOnColor;
-// Font of the switches, will be set in initalization of menu & be used on switches.
 NSString *switchTitleFont;
-// Title color of the switches, will be set in initalization of menu & be used on switches.
 UIColor *switchTitleColor;
-// Info Button Color of the switches, will be set in initalization of menu & be used on switches.
 UIColor *infoButtonColor;
+NSString *menuIconBase64;
+NSString *menuButtonBase64;
 
 //main window of the app we'll be injecting to.
 UIWindow *mainWindow;
@@ -43,7 +38,7 @@ UIView *selfView;
 // will increase with every switch!
 float scrollViewHeight = 0;
 
--(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ {
+-(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
     
     mainWindow = [UIApplication sharedApplication].keyWindow;
     selfView = self;
@@ -55,6 +50,8 @@ float scrollViewHeight = 0;
     switchTitleFont = switchTitleFont_;
     switchTitleColor = switchTitleColor_;
     infoButtonColor = infoButtonColor_;
+
+    menuButtonBase64 = menuButtonBase64_;
     
     defaults = [NSUserDefaults standardUserDefaults];
     
@@ -71,20 +68,14 @@ float scrollViewHeight = 0;
     header.layer.mask = headerLayer;
     [self addSubview:header];
 
-    //Get the Bundle
-    NSBundle *bundle = [[NSBundle alloc] initWithPath:@"/Library/MobileSubstrate/DynamicLibraries/@@PROJECTNAME@@_BUNDLE.bundle"];
+    NSData* data = [[NSData alloc] initWithBase64EncodedString:menuIconBase64_ options:0];
+    UIImage* menuIconImage = [UIImage imageWithData:data];      
     
-    //Get Path to Image
-    NSString *imagePath = [bundle pathForResource:@"menuIcon" ofType:@"png"];
-    
-    //UIImage From File
-    UIImage *buttonImage = [UIImage imageWithContentsOfFile:imagePath];    
-    
-    //menu icon -> click it = credits popup thingy
+    //menu icon -> click it & credits popup thingy
     UIButton *menuIcon = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     menuIcon.frame = CGRectMake(5, 1, 50, 50);
     menuIcon.backgroundColor = [UIColor clearColor];
-    [menuIcon setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [menuIcon setBackgroundImage:menuIconImage forState:UIControlStateNormal];
     
     [menuIcon addTarget:self action:@selector(menuIconTapped) forControlEvents:UIControlEventTouchDown];
     [header addSubview:menuIcon];
@@ -158,7 +149,7 @@ float scrollViewHeight = 0;
         [UIView animateWithDuration:0.5 animations:^ {
             self.alpha = 1.0f;
         }];
-        
+
         //restore last "session" (where the switches on etc)
         restoreLastSession();
     }
@@ -216,26 +207,19 @@ void restoreLastSession() {
 }
 
 -(void)showMenuButton {
-    
-    //Get the Bundle
-    NSBundle *bundle = [[NSBundle alloc] initWithPath:@"/Library/MobileSubstrate/DynamicLibraries/@@PROJECTNAME@@_BUNDLE.bundle"];
-    
-    //Get Path to Image
-    NSString *imagePath = [bundle pathForResource:@"menuButton" ofType:@"png"];
-    
-    //UIImage From File
-    UIImage *buttonImage = [UIImage imageWithContentsOfFile:imagePath];
+    NSData* data = [[NSData alloc] initWithBase64EncodedString:menuButtonBase64 options:0];
+    UIImage* menuButtonImage = [UIImage imageWithData:data];        
     
     UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     menuButton.frame = CGRectMake((mainWindow.frame.size.width/2), (mainWindow.frame.size.height/2), 50, 50);
     menuButton.backgroundColor = [UIColor clearColor];
-    [menuButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [menuButton setBackgroundImage:menuButtonImage forState:UIControlStateNormal];
     
-    // tap gesture recognizer for when the button has been clicked
+    //Adding a tap gesture to the button
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showMenu:)];
     [menuButton addGestureRecognizer:tapGestureRecognizer];
     
-    // if the button is being dragged, what to do?
+    //Adding a dragging control event to the button
     [menuButton addTarget:self action:@selector(buttonDragged:withEvent:)
        forControlEvents:UIControlEventTouchDragInside];
     [mainWindow addSubview:menuButton];
