@@ -23,5 +23,3 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::
 	install.exec "killall -9 @@BINARYNAME@@ || :"
-
-include $(THEOS_MAKE_PATH)/aggregate.mk
