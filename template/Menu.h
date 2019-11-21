@@ -8,7 +8,6 @@
 
 #import <vector>
 #import "UIKit/UIKit.h"
-#import "KittyMemory/writeData.hpp"
 #import "KittyMemory/MemoryPatch.hpp"
 #import "KittyMemory/initializer_list"
 #import "SCLAlertView/SCLAlertView.h" 
