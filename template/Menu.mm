@@ -16,7 +16,6 @@
     UIView *footer;
 }
 
-// For saving to the pref.plist
 NSUserDefaults *defaults;
 
 UIScrollView *scrollView;
@@ -29,14 +28,10 @@ UIColor *switchTitleColor;
 UIColor *infoButtonColor;
 NSString *menuIconBase64;
 NSString *menuButtonBase64;
-
-//main window of the app we'll be injecting to.
-UIWindow *mainWindow;
-// getting the self view, need this so we can hide the menu when showing descriptions of hacks.
-UIView *selfView;
-
-// will increase with every switch!
 float scrollViewHeight = 0;
+
+UIWindow *mainWindow;
+UIView *selfView;
 
 -(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
     mainWindow = [UIApplication sharedApplication].keyWindow;
@@ -479,7 +474,7 @@ void restoreLastSession() {
     [sliderValue addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     valueOfSlider = sliderValue.value;
     
-    // //get value from the plist & show it (if it's not empty).
+    // get value from the plist & show it (if it's not empty).
     if([[NSUserDefaults standardUserDefaults] objectForKey:switchValueKey] != nil) {
         sliderValue.value = [[NSUserDefaults standardUserDefaults] floatForKey:switchValueKey];
         sliderSwitch.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
