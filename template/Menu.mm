@@ -41,25 +41,21 @@ float scrollViewHeight = 0;
 -(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
     mainWindow = [UIApplication sharedApplication].keyWindow;
     selfView = self;
+    defaults = [NSUserDefaults standardUserDefaults];
     
     menuWidth = menuWidth_;
     switchOnColor = switchOnColor_;
-    
     credits = credits_;
     switchTitleFont = switchTitleFont_;
     switchTitleColor = switchTitleColor_;
     infoButtonColor = infoButtonColor_;
-
     menuButtonBase64 = menuButtonBase64_;
     
-    defaults = [NSUserDefaults standardUserDefaults];
-    
-    // in this we can add stuff.
+    // Base of the Menu UI.
     self = [super initWithFrame:CGRectMake(0,0,menuWidth_, maxVisibleSwitches_ * 50 + 50)];
     self.center = mainWindow.center;
     self.layer.opacity = 0.0f;
     
-    //this is the header (where the title of menu is at.
     header = [[UIView alloc]initWithFrame:CGRectMake(0, 1, menuWidth_, 50)];
     header.backgroundColor = headerColor_;
     CAShapeLayer *headerLayer = [CAShapeLayer layer];
@@ -70,7 +66,6 @@ float scrollViewHeight = 0;
     NSData* data = [[NSData alloc] initWithBase64EncodedString:menuIconBase64_ options:0];
     UIImage* menuIconImage = [UIImage imageWithData:data];      
     
-    //menu icon -> click it & credits popup thingy
     UIButton *menuIcon = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     menuIcon.frame = CGRectMake(5, 1, 50, 50);
     menuIcon.backgroundColor = [UIColor clearColor];
@@ -79,15 +74,13 @@ float scrollViewHeight = 0;
     [menuIcon addTarget:self action:@selector(menuIconTapped) forControlEvents:UIControlEventTouchDown];
     [header addSubview:menuIcon];
     
-    //this is the scroll view, here will the hacks be placed in.
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, header.self.bounds.size.height, menuWidth_, self.bounds.size.height - header.self.bounds.size.height)];
     scrollView.backgroundColor = switchOffColor_;
     [self addSubview:scrollView];
     
-    // we need this for the switches.
+    // we need this for the switches, do not remove.
     scrollViewX = scrollView.self.bounds.origin.x;
     
-    //title of the menu
     menuTitle = [[UILabel alloc]initWithFrame:CGRectMake(55, -2, menuWidth_ - 60, 50)];
     menuTitle.text = title_;
     menuTitle.textColor = titleColor_;
@@ -96,7 +89,6 @@ float scrollViewHeight = 0;
     menuTitle.textAlignment = NSTextAlignmentCenter;
     [header addSubview: menuTitle];
     
-    //footer -> added because menu looks ugly otherwise.
     footer = [[UIView alloc]initWithFrame:CGRectMake(0, self.bounds.size.height - 1, menuWidth_, 20)];
     footer.backgroundColor = headerColor_;
     CAShapeLayer *footerLayer = [CAShapeLayer layer];
@@ -104,11 +96,9 @@ float scrollViewHeight = 0;
     footer.layer.mask = footerLayer;
     [self addSubview:footer];
     
-    //handle the dragging of the menu
     UIPanGestureRecognizer *dragMenuRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(menuDragged:)];
     [header addGestureRecognizer:dragMenuRecognizer];
     
-    // double tap the header = close the menu
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideMenu:)];
     tapGestureRecognizer.numberOfTapsRequired = 2;
     [header addGestureRecognizer:tapGestureRecognizer];
@@ -119,19 +109,18 @@ float scrollViewHeight = 0;
     return self;
 }
 
-//checking the touches on the menu, which will be used to retireve it's location.
+// Detects whether the menu is being touched and sets a lastMenuLocation.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     lastMenuLocation = CGPointMake(self.frame.origin.x, self.frame.origin.y);
     [super touchesBegan:touches withEvent:event];
 }
 
-//handle the new location of menu when dragged to a specific point.
+// Update the menu's location when it's being dragged
 - (void)menuDragged:(UIPanGestureRecognizer *)pan {
     CGPoint newLocation = [pan translationInView:self.superview];
     self.frame = CGRectMake(lastMenuLocation.x + newLocation.x, lastMenuLocation.y + newLocation.y, self.frame.size.width, self.frame.size.height);
 }
 
-// double tap the header for hiding the menu!
 - (void)hideMenu:(UITapGestureRecognizer *)tap {
     if(tap.state == UIGestureRecognizerStateEnded) {
         [UIView animateWithDuration:0.5 animations:^ {
@@ -140,14 +129,12 @@ float scrollViewHeight = 0;
     }
 }
 
-// This method will make the menu appear.
 -(void)showMenu:(UITapGestureRecognizer *)tapGestureRecognizer {
     if(tapGestureRecognizer.state == UIGestureRecognizerStateEnded) {
         [UIView animateWithDuration:0.5 animations:^ {
             self.alpha = 1.0f;
         }];
 
-        //restore last "session"
         restoreLastSession();
     }
 }
@@ -191,11 +178,9 @@ void restoreLastSession() {
     menuButton.backgroundColor = [UIColor clearColor];
     [menuButton setBackgroundImage:menuButtonImage forState:UIControlStateNormal];
     
-    //Adding a tap gesture to the button
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showMenu:)];
     [menuButton addGestureRecognizer:tapGestureRecognizer];
     
-    //Adding a dragging control event to the button
     [menuButton addTarget:self action:@selector(buttonDragged:withEvent:)
        forControlEvents:UIControlEventTouchDragInside];
     [mainWindow addSubview:menuButton];
@@ -297,12 +282,12 @@ void restoreLastSession() {
 }
 
 - (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_ {
-    
     offsets = offsets_;
     bytes = bytes_;
     description = description_;
+    preferencesKey = hackName_;
 
-    // add memory patch to memorypatches vector array
+    // For each offset, we create a MemoryPatch.
     for(int i = 0; i < offsets.size(); i++) {
         if(bytes[i] < 0xFFFFFFFF) {
             bytes[i] = _OSSwapInt32(bytes[i]);
@@ -312,8 +297,6 @@ void restoreLastSession() {
             memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], sizeof(uint64_t)));
         }
     }
-    
-    preferencesKey = hackName_;
     
     self = [super initWithFrame:CGRectMake(-1, scrollViewX + scrollViewHeight - 1, menuWidth + 2, 50)];
     self.backgroundColor = [UIColor clearColor];
@@ -339,8 +322,6 @@ void restoreLastSession() {
     return self;
 }
 
-
-// show info (description)
 -(void)showInfo:(UIGestureRecognizer *)gestureRec {
     Menu *menu = [[Menu alloc] init];
     
@@ -379,12 +360,8 @@ void restoreLastSession() {
 }
 
 - (id)initTextfieldNamed:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_ {
-    
-    //give each switch unique prefkey
     preferencesKey = hackName_;
-    //we will store users value here
     switchValueKey = [hackName_ stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
-    
     description = description_;
     
     self = [super initWithFrame:CGRectMake(-1, scrollViewX + scrollViewHeight -1, menuWidth + 2, 50)];
@@ -392,7 +369,6 @@ void restoreLastSession() {
     self.layer.borderWidth = 0.5f;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
     
-    //switch styling
     textfieldSwitch = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
     textfieldSwitch.text = hackName_;
     textfieldSwitch.textColor = switchTitleColor;
@@ -401,7 +377,6 @@ void restoreLastSession() {
     textfieldSwitch.textAlignment = NSTextAlignmentCenter;
     [self addSubview:textfieldSwitch];
     
-    // input styling
     textfieldValue = [[UITextField alloc]initWithFrame:CGRectMake(menuWidth / 4 - 10, textfieldSwitch.self.bounds.origin.x - 5 + textfieldSwitch.self.bounds.size.height, menuWidth / 2, 20)];
     textfieldValue.layer.borderWidth = 2.0f;
     textfieldValue.layer.borderColor = inputBorderColor_.CGColor;
@@ -477,12 +452,8 @@ void restoreLastSession() {
 }
 
 - (id)initSliderNamed:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_{
-    
-    //give each switch unique prefkey
     preferencesKey = hackName_;
-    //we will store users value here
     switchValueKey = [hackName_ stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
-    
     description = description_;
     
     self = [super initWithFrame:CGRectMake(-1, scrollViewX + scrollViewHeight -1, menuWidth + 2, 50)];
@@ -490,7 +461,6 @@ void restoreLastSession() {
     self.layer.borderWidth = 0.5f;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
     
-    //switch styling
     sliderSwitch = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
     sliderSwitch.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
     sliderSwitch.textColor = switchTitleColor;
@@ -499,7 +469,6 @@ void restoreLastSession() {
     sliderSwitch.textAlignment = NSTextAlignmentCenter;
     [self addSubview:sliderSwitch];
     
-    // input styling
     sliderValue = [[UISlider alloc]initWithFrame:CGRectMake(menuWidth / 4 - 20, sliderSwitch.self.bounds.origin.x - 4 + sliderSwitch.self.bounds.size.height, menuWidth / 2 + 20, 20)];
     sliderValue.thumbTintColor = sliderColor_;
     sliderValue.minimumTrackTintColor = switchTitleColor;
