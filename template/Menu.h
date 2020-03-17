@@ -12,7 +12,7 @@
 #import "KittyMemory/initializer_list"
 #import "SCLAlertView/SCLAlertView.h" 
 
-@class OffsetPatcher;
+@class OffsetSwitch;
 @class TextFieldSwitch;
 @class SliderSwitch;
 
@@ -23,21 +23,17 @@
 
 -(void)showMenuButton;
 
--(void)addOffsetSwitchToMenu:(OffsetPatcher *)offsetPatcher;
-- (void)addTextfieldSwitchToMenu:(TextFieldSwitch *)textfieldSwitch;
-- (void)addSliderSwitchToMenu:(SliderSwitch *)sliderSwitch;
+-(void)addSwitchToMenu:(id)switch_;
 
 @end
 
-@interface OffsetPatcher : UIButton
+@interface OffsetSwitch : UIButton
 
 - (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_;
 
 
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
--(std::vector<uint64_t>)getOffsets;
-- (std::vector<uint64_t>)getBytes;
 - (std::vector<MemoryPatch>)getMemoryPatches;
 
 

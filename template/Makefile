@@ -2,6 +2,8 @@
 # Also, you'll have to remove '#import "KittyMemory/initializer_list"' from Menu.h for it being able to compile this menu.
 # Once done that, uncomment the "#arm64e" by removing the "#"
 
+# THEOS_DEVICE_IP = 127.0.0.1 -p 2222 # install to device from pc
+TARGET = iphone:latest:7.0
 ARCHS = arm64 #arm64e
 
 DEBUG = 0
@@ -12,7 +14,8 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = @@PROJECTNAME@@
 
-@@PROJECTNAME@@_CCFLAGS = -std=c++11 -fno-rtti -fno-exceptions -DNDEBUG
+@@PROJECTNAME@@_CCFLAGS = -std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -DNDEBUG
+@@PROJECTNAME@@_LDFLAGS = -stdlib=libc++
 @@PROJECTNAME@@_CFLAGS = -fobjc-arc #-w #-Wno-deprecated -Wno-deprecated-declarations
 @@PROJECTNAME@@_FILES = Tweak.xm Menu.mm SwitchesTemplate.mm $(wildcard KittyMemory/*.cpp) $(wildcard SCLAlertView/*.m)
 

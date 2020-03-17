@@ -15,55 +15,32 @@
 static Menu *menu = [[Menu alloc]init];
 
 -(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_ {
-    
-    // We can just use the offsetpatcher method, but just not enter any offsets :)
-    OffsetPatcher *offsetPatch = [[OffsetPatcher alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<uint64_t>{}];
-    
-    //adding it to the menu
-    [menu addOffsetSwitchToMenu:offsetPatch];
+    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<uint64_t>{}];
+    [menu addSwitchToMenu:offsetPatch];
     
 }
 
-/*
- This is the "template" for simple offset patching.
- */
-
 - (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<uint64_t>)bytes_ {
-    
     std::vector<uint64_t> offsetVector;
     std::vector<uint64_t> bytesVector;
     
     offsetVector.insert(offsetVector.begin(), offsets_.begin(), offsets_.end());
     bytesVector.insert(bytesVector.begin(), bytes_.begin(), bytes_.end());
     
-    OffsetPatcher *offsetPatch = [[OffsetPatcher alloc]initHackNamed:hackName_ description:description_ offsets:offsetVector bytes:bytesVector];
-    
-    //adding it to the menu
-    [menu addOffsetSwitchToMenu:offsetPatch];
+    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:offsetVector bytes:bytesVector];
+    [menu addSwitchToMenu:offsetPatch];
 }
 
 
-
-/*
- This is the "template" for user input switch.
- */
-
 - (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_ { 
-    
     TextFieldSwitch *textfieldSwitch = [[TextFieldSwitch alloc]initTextfieldNamed:hackName_ description:description_ inputBorderColor:inputBorderColor_];
-    
-    [menu addTextfieldSwitchToMenu:textfieldSwitch];
+    [menu addSwitchToMenu:textfieldSwitch];
 }
 
 - (void)addSliderSwitch:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_ {
-    
     SliderSwitch *sliderSwitch = [[SliderSwitch alloc] initSliderNamed:hackName_ description:description_ minimumValue:minimumValue_ maximumValue:maximumValue_ sliderColor:sliderColor_];
-    
-    [menu addSliderSwitchToMenu:sliderSwitch];
+    [menu addSwitchToMenu:sliderSwitch];
 }
-
-
-
 
 // get value from textfield or slider
 - (NSString *)getValueFromSwitch:(NSString *)name {
