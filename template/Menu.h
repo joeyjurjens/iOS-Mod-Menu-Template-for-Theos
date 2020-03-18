@@ -9,7 +9,6 @@
 #import <vector>
 #import "UIKit/UIKit.h"
 #import "KittyMemory/MemoryPatch.hpp"
-#import "KittyMemory/initializer_list"
 #import "SCLAlertView/SCLAlertView.h" 
 
 @class OffsetSwitch;
@@ -22,7 +21,6 @@
 
 
 -(void)showMenuButton;
-
 -(void)addSwitchToMenu:(id)switch_;
 
 @end

@@ -139,10 +139,10 @@ UIView *selfView;
      It'll handle the correct background color and patches the switches do.
 ***********************************************************************************************/
 void restoreLastSession() {
+    UIColor *clearColor = [UIColor clearColor];
+    BOOL isOn = false;    
+    
     for(id switch_ in scrollView.subviews) {
-        UIColor *clearColor = [UIColor clearColor];
-        BOOL isOn = false;
-
         if([switch_ isKindOfClass:[OffsetSwitch class]]) {
             isOn = [defaults boolForKey:[switch_ getPreferencesKey]];
             std::vector<MemoryPatch> memoryPatches = [switch_ getMemoryPatches];            
