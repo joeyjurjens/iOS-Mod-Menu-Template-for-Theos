@@ -6,13 +6,13 @@
 //  Copyright © 2019 Joey. All rights reserved.
 //
 
-#include "SwitchesTemplate.h"
+#include "Menu.h"
 #include <substrate.h>
 #include <mach-o/dyld.h>
 
-static Menu *menu;
-// init the switches.
-static Switches *switches = [[Switches alloc]init];
+// definition at Menu.h
+extern Menu *menu;
+extern Switches *switches;
 
 // thanks to shmoo for the usefull stuff under this comment.
 #define timer(sec) dispatch_after(dispatch_time(DISPATCH_TIME_NOW, sec * NSEC_PER_SEC), dispatch_get_main_queue(), ^

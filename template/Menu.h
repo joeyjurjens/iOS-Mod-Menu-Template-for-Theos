@@ -6,14 +6,17 @@
 //  Copyright © 2019 Joey. All rights reserved.
 //
 
-#import <vector>
 #import "UIKit/UIKit.h"
 #import "KittyMemory/MemoryPatch.hpp"
-#import "SCLAlertView/SCLAlertView.h" 
+#import "SCLAlertView/SCLAlertView.h"
+
+#import <vector>
+#import <initializer_list>
 
 @class OffsetSwitch;
 @class TextFieldSwitch;
 @class SliderSwitch;
+@class Switches;
 
 @interface Menu : UIView
 
@@ -54,5 +57,21 @@
 -(NSString *)getPreferencesKey;
 -(NSString *)getSwitchValueKey;
 -(NSString *)getDescription;
+
+@end
+
+
+@interface Switches : UIButton
+
+-(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_;
+
+- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<uint64_t>)bytes_;
+
+- (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
+
+- (void)addSliderSwitch:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
+
+- (NSString *)getValueFromSwitch:(NSString *)name;
+-(bool)isSwitchOn:(NSString *)switchName;
 
 @end

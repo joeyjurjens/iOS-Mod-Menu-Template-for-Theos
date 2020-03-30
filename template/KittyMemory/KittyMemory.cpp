@@ -12,6 +12,21 @@
 
 using KittyMemory::Memory_Status;
 
+
+// mey not be accurate
+static bool cydiaExist(){
+  bool ret = false;
+  FILE *f = NULL;
+  if(( f = fopen( "/Applications/Cydia.app" , "r" ) ) 
+  || ( f = fopen( "/Library/MobileSubstrate/MobileSubstrate.dylib" , "r" ) )){
+      ret = true;
+  }
+  if(f != NULL){
+    fclose(f);
+  }
+  return ret;
+}
+
 typedef void (*MSHookMemory_t)(void *, const void *, size_t);
 inline bool findMSHookMemory(void *dst, const void *src, size_t len){
   static void *ret = MSFindSymbol(NULL, "_MSHookMemory");
@@ -64,8 +79,9 @@ Memory_Status KittyMemory::memWrite(void *address, const void *buffer, size_t le
 
     if (len < 1 || len > INT_MAX)
         return INV_LEN;
-
-    if(findMSHookMemory(address, buffer, len)){
+	
+	// check for MSHookMemory that was added recently, but check for cydia existance first.
+    if(cydiaExist() && findMSHookMemory(address, buffer, len)){ 
        return SUCCESS;
      }
 
