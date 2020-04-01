@@ -12,25 +12,30 @@
 * Customizable UI
 * Customizable menu & button image icon
 * 4 types of switches:
-	* Offset Patcher Switch
-	* Empty Switch
-	* Textfield Switch
-	* Slider Switch
+  * Offset Patcher Switch
+  * Empty Switch
+  * Textfield Switch
+  * Slider Switch
 
 * Backend Offset Patcher Switch is based on [KittyMemory](https://github.com/MJx0/KittyMemory)
-	* Original bytes are <b>not</b> required
-	* Supports MSHookMemory
+  * Original bytes are <b>not</b> required
+  * Supports MSHookMemory
 
 * Open Source Menu
 
 <br>
 
-### Usage:
+### Installation:
 
-Download the .tar file & place it inside '/var/theos/templates/ios' & then run nic.pl to create a project <br>
-If you want to customize the template, download the github project & copy the "project" folder on your phone. <br>
-Make the changes you want, cd into your project & run this command: '/var/theos/bin/nicify.pl ./'. <br>
-This will create a new .tar file inside the folder, place this in '/var/theos/templates/ios'. <br>
+Download/clone this project and copy the .tar file to '$THEOS/templates/ios' & then run nic.pl to create a project <br>
+<b>iOS:</b>
+1. In the makefile on line 22, you've to set the path to your SDK. This menu has been tested with the "iPhoneOS11.2.sdk" SDK from [theos/sdks](https://github.com/theos/sdks)
+2. I use initializer_list in this project, iOS doesn't have this included by itself. You can download it [<b>here</b>](https://raw.githubusercontent.com/joeyjurjens/iOS-Mod-Menu-Template-for-Theos/977e9ff2c626d6b1308eed7e17f1daf0a610e8e9/template/KittyMemory/initializer_list), save it as "initializer_list" and copy the file to: "$THEOS/sdks/iPhoneOS11.2.sdk/usr/include/c++/4.2.1/" <br>
+
+<b>MacOS:</b>
+1.  In the Makefile of the project, change "MOBILE_THEOS=1" to "MOBILE_THEOS=0" on line 19 of the makefile. <br>
+
+### Usage:
 
 <b> Changing the menu images </b>
 
@@ -83,7 +88,7 @@ Images 50x50 are recommended, you can get a sample of my images by copying the s
 bool isOn = [switches isSwitchOn:@"Switch Name Goes Here"];
     
 if(isOn) {
-	//Do stuff
+  //Do stuff
 }
     
 //Or check directly:
@@ -100,14 +105,6 @@ float userValue2 = [[switches getValueFromSwitch:@"Switch Name Goes Here"] float
 <br>
 The sample.xm in the project shows an example project.
 <br>
-<br>
-
-### To Do:
-* Some kind of string obfuscation/encryption against leeching
-* Offset Tester Switch
-* You tell me!
-
-<br>
 
 ### Credits:
 * Me
@@ -120,5 +117,5 @@ The sample.xm in the project shows an example project.
 
 ### Contact:
 If you have any questions, suggestions, bugs or anything else:
-<br> <b>Discord:</b> Joey #0309
+<br> <b>Discord:</b> Joey#0309
 
