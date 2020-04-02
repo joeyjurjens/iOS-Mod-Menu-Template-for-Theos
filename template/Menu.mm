@@ -330,7 +330,7 @@ void restoreLastSession() {
 -(void)showInfo:(UIGestureRecognizer *)gestureRec {
     if(gestureRec.state == UIGestureRecognizerStateEnded) {
         [menu showPopup:[self getPreferencesKey] description:[self getDescription]];
-        self.layer.opacity = 0.0f;
+        menu.layer.opacity = 0.0f;
     }
 }
 
@@ -410,7 +410,7 @@ void restoreLastSession() {
 -(void)showInfo:(UIGestureRecognizer *)gestureRec {
     if(gestureRec.state == UIGestureRecognizerStateEnded) {
         [menu showPopup:[self getPreferencesKey] description:[self getDescription]];
-        self.layer.opacity = 0.0f;
+        menu.layer.opacity = 0.0f;
     }
 }
 
@@ -502,7 +502,7 @@ void restoreLastSession() {
 -(void)showInfo:(UIGestureRecognizer *)gestureRec {
     if(gestureRec.state == UIGestureRecognizerStateEnded) {
         [menu showPopup:[self getPreferencesKey] description:[self getDescription]];
-        self.layer.opacity = 0.0f;
+        menu.layer.opacity = 0.0f;
     }
 }
 
