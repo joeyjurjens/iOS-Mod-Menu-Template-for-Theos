@@ -1,5 +1,6 @@
 #!/bin/bash
 VERSION='0.5.0'
+# Don't remove the above line. Serves as the version this script will fetch. Only update when a new version is out.
 
 ERROR='\033[1;31m[*] Error:\033[1;37m '
 SUCCESS='\033[1;32m==>\033[1;37m '
@@ -15,6 +16,14 @@ if ! [ -x "$(command -v sed)" ]; then
 	exit 0 # Exit 0 since this is not critical. (Allows compilation to continue)
 fi
 
-if ! [ $(curl -Ls https://github.com/bR34Kr/iOS-Mod-Menu-Template-for-Theos/raw/master/template/Macros.h | sed -n 2p) = "VERSION='$VERSION'"  ]; then
-	echo -e "${SUCCESS}A newer version is available!"
+# Check if GitHub is reachable
+curl -s https://github.com > /dev/null
+githubReachable=$?
+
+if ! [ $githubReachable == 0  ]; then
+	exit 0
+fi
+
+if ! [ $(curl -Ls https://github.com/joeyjurjens/iOS-Mod-Menu-Template-for-Theos/raw/master/template/versionCheck.sh | sed -n 2p) = "VERSION='$VERSION'"  ]; then
+	echo -e "${SUCCESS}A newer version of the template is available!"
 fi
