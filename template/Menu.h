@@ -25,17 +25,20 @@
 
 -(void)showMenuButton;
 -(void)addSwitchToMenu:(id)switch_;
+-(void)showPopup:(NSString *)title_ description:(NSString *)description_;
 
 @end
 
 @interface OffsetSwitch : UIButton
 
-- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_;
-
+- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<std::string>)bytes_;
 
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
 - (std::vector<MemoryPatch>)getMemoryPatches;
+std::string getNonHexString(std::string hexString);
+bool isValidHexString(std::string hexString);
+std::vector<uint32_t> getHexBytesVector(std::string hexString);
 
 
 @end
@@ -65,7 +68,7 @@
 
 -(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_;
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<uint64_t>)bytes_;
+- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<std::string>)bytes_;
 
 - (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
 

@@ -34,6 +34,8 @@ UIColor *infoButtonColor;
 NSString *menuIconBase64;
 NSString *menuButtonBase64;
 float scrollViewHeight = 0;
+BOOL hasRestoredLastSession = false;
+UIButton *menuButton;
 
 UIWindow *mainWindow;
 
@@ -130,17 +132,22 @@ Switches *switches = [[Switches alloc]init];
     if(tap.state == UIGestureRecognizerStateEnded) {
         [UIView animateWithDuration:0.5 animations:^ {
             self.alpha = 0.0f;
+            menuButton.alpha = 1.0f;
         }];
     }
 }
 
 -(void)showMenu:(UITapGestureRecognizer *)tapGestureRecognizer {
     if(tapGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        menuButton.alpha = 0.0f;
         [UIView animateWithDuration:0.5 animations:^ {
             self.alpha = 1.0f;
         }];
-
+    }
+    // We should only have to do this once (first launch)
+    if(!hasRestoredLastSession) {
         restoreLastSession();
+        hasRestoredLastSession = true;
     }
 }
 
@@ -178,7 +185,7 @@ void restoreLastSession() {
     NSData* data = [[NSData alloc] initWithBase64EncodedString:menuButtonBase64 options:0];
     UIImage* menuButtonImage = [UIImage imageWithData:data];
 
-    UIButton *menuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    menuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     menuButton.frame = CGRectMake((mainWindow.frame.size.width/2), (mainWindow.frame.size.height/2), 50, 50);
     menuButton.backgroundColor = [UIColor clearColor];
     [menuButton setBackgroundImage:menuButtonImage forState:UIControlStateNormal];
@@ -279,28 +286,27 @@ void restoreLastSession() {
 
 @implementation OffsetSwitch {
     NSString *preferencesKey;
-    std::vector<uint64_t> offsets;
-    std::vector<uint64_t> bytes;
     std::vector<MemoryPatch> memoryPatches;
     UILabel *offsetPatchSwitch;
     NSString *description;
 }
 
-- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<uint64_t>)bytes_ {
-    offsets = offsets_;
-    bytes = bytes_;
+- (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<std::string>)bytes_ {
     description = description_;
     preferencesKey = hackName_;
 
     // For each offset, we create a MemoryPatch.
-    for(int i = 0; i < offsets.size(); i++) {
-       if(bytes[i] < 0xFFFFFFFF) {
-           bytes[i] = _OSSwapInt32(bytes[i]);
-           memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], sizeof(uint32_t)));
-       } else {
-           bytes[i] = _OSSwapInt64(bytes[i]);
-           memoryPatches.push_back(MemoryPatch(NULL,offsets[i], &bytes[i], sizeof(uint64_t)));
-       }
+    for(int i = 0; i < offsets_.size(); i++) {
+        int offsetCount = i;
+        if(isValidHexString(bytes_[i])) {
+            std::vector<uint32_t> hexBytesVector = getHexBytesVector(bytes_[i]);
+            for(int i = 0; i < hexBytesVector.size(); i++) {
+                uint32_t hexBytes = _OSSwapInt32(hexBytesVector[i]);
+                memoryPatches.push_back(MemoryPatch(NULL,offsets_[offsetCount] + (i * 4), &hexBytes, sizeof(uint32_t)));
+            }            
+        } else {
+            [menu showPopup:@"Invalid Hex" description:[NSString stringWithFormat:@"Failing offset: 0x%llx, please re-check the hex you entered.", offsets_[offsetCount]]];
+        }
     }
 
     self = [super initWithFrame:CGRectMake(-1, scrollViewX + scrollViewHeight - 1, menuWidth + 2, 50)];
@@ -344,6 +350,33 @@ void restoreLastSession() {
 
 - (std::vector<MemoryPatch>)getMemoryPatches {
     return memoryPatches;
+}
+
+std::string getNonHexString(std::string hexString) {
+    std::string firstTwoCharacters = hexString.substr(0, 2);
+    if(firstTwoCharacters == "0x") {
+        hexString.erase(0,2);
+    }
+    hexString.erase(remove(hexString.begin(), hexString.end(), ' '), hexString.end());
+    return hexString;
+}
+
+bool isValidHexString(std::string hexString) {
+    hexString = getNonHexString(hexString);
+    if(hexString.size() == 0 || hexString.size() % 8 != 0) {
+        return false;
+    }
+    return true;
+}
+
+std::vector<uint32_t> getHexBytesVector(std::string hexString) {
+    std::vector<uint32_t> stringHexBytes;
+    std::string nonHexString = getNonHexString(hexString);
+    for(int i = 0; i <= nonHexString.size() - 1; i+=8) {
+        std::string byteString = nonHexString.substr(i, 8);
+        stringHexBytes.push_back(strtoull(byteString.c_str(), nullptr, 16));
+    }
+    return stringHexBytes;
 }
 
 @end //end of OffsetSwitch class
@@ -534,14 +567,14 @@ void restoreLastSession() {
 
 
 -(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_ {
-    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<uint64_t>{}];
+    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<std::string>{}];
     [menu addSwitchToMenu:offsetPatch];
 
 }
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<uint64_t>)bytes_ {
+- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<std::string>)bytes_ {
     std::vector<uint64_t> offsetVector;
-    std::vector<uint64_t> bytesVector;
+    std::vector<std::string> bytesVector;
 
     offsetVector.insert(offsetVector.begin(), offsets_.begin(), offsets_.end());
     bytesVector.insert(bytesVector.begin(), bytes_.begin(), bytes_.end());
@@ -549,7 +582,6 @@ void restoreLastSession() {
     OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:offsetVector bytes:bytesVector];
     [menu addSwitchToMenu:offsetPatch];
 }
-
 
 - (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_ {
     TextFieldSwitch *textfieldSwitch = [[TextFieldSwitch alloc]initTextfieldNamed:hackName_ description:description_ inputBorderColor:inputBorderColor_];
@@ -561,7 +593,6 @@ void restoreLastSession() {
     [menu addSwitchToMenu:sliderSwitch];
 }
 
-// get value from textfield or slider
 - (NSString *)getValueFromSwitch:(NSString *)name {
 
     //getting the correct key for the saved input.
@@ -578,7 +609,6 @@ void restoreLastSession() {
     return 0;
 }
 
-// this method can be used to check whether a switch is on or not!
 -(bool)isSwitchOn:(NSString *)switchName {
     return [[NSUserDefaults standardUserDefaults] boolForKey:switchName];
 }
