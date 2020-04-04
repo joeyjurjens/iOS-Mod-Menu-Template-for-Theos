@@ -28,7 +28,7 @@
 
 ### Installation:
 
-You can download the template here: [Latest Release](github.com/joeyjurjens/iOS-Mod-Menu-Template-for-Theos/releases/latest). <br>
+You can download the template here: [Latest Release](https://github.com/joeyjurjens/iOS-Mod-Menu-Template-for-Theos/releases/latest). <br>
 <b>Also follow the instructions below otherwise you will run into errors!<b> <br>
 <b>iOS:</b>
 1. In the makefile on line 22, you've to set the path to your SDK. This menu has been tested with the "iPhoneOS11.2.sdk" SDK from [theos/sdks](https://github.com/theos/sdks)
