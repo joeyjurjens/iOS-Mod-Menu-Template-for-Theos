@@ -81,7 +81,7 @@ Switches *switches = [[Switches alloc]init];
     [menuIcon addTarget:self action:@selector(menuIconTapped) forControlEvents:UIControlEventTouchDown];
     [self.header addSubview:menuIcon];
 
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.header.bounds), menuWidth_, CGRectGetMaxY(self.bounds) - CGRectGetMaxY(self.header.bounds))];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.header.bounds), menuWidth_, CGRectGetHeight(self.bounds) - CGRectGetHeight(self.header.bounds))];
     scrollView.backgroundColor = switchOffColor_;
     [self addSubview:scrollView];
 
@@ -96,7 +96,7 @@ Switches *switches = [[Switches alloc]init];
     self.menuTitle.textAlignment = NSTextAlignmentCenter;
     [self.header addSubview: self.menuTitle];
 
-    self.footer = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.bounds) - 1, menuWidth_, 20)];
+    self.footer = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 1, menuWidth_, 20)];
     self.footer.backgroundColor = headerColor_;
     CAShapeLayer *footerLayer = [CAShapeLayer layer];
     footerLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.footer.bounds byRoundingCorners: UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii: (CGSize){10.0, 10.0}].CGPath;
@@ -125,7 +125,7 @@ Switches *switches = [[Switches alloc]init];
 // Update the menu's location when it's being dragged
 - (void)menuDragged:(UIPanGestureRecognizer *)pan {
     CGPoint newLocation = [pan translationInView:self.superview];
-    self.frame = CGRectMake(self.lastMenuLocation.x + newLocation.x, self.lastMenuLocation.y + newLocation.y, CGRectGetMaxX(self.frame), CGRectGetMaxY(self.frame));
+    self.frame = CGRectMake(self.lastMenuLocation.x + newLocation.x, self.lastMenuLocation.y + newLocation.y, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
 }
 
 - (void)hideMenu:(UITapGestureRecognizer *)tap {
