@@ -36,9 +36,6 @@
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
 - (std::vector<MemoryPatch>)getMemoryPatches;
-std::string getNonHexString(std::string hexString);
-bool isValidHexString(std::string hexString);
-std::vector<uint32_t> getHexBytesVector(std::string hexString);
 
 
 @end

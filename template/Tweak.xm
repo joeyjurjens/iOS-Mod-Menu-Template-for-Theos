@@ -13,6 +13,11 @@ void setup() {
 
   // You can write as many bytes as you want to an offset
   patchOffset(0x10020D3A8, "0x00F0271E0008201EC0035FD6");
+  // or  
+  patchOffset(0x10020D3A8, "00F0271E0008201EC0035FD6");
+  // spaces are fine too
+  patchOffset(0x10020D3A8, "00 F0 27 1E 00 08 20 1E C0 03 5F D6");
+
 
   // Empty switch - usefull with hooking
   [switches addSwitch:@"Masskill"
