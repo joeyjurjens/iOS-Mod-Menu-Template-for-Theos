@@ -164,7 +164,11 @@ void restoreLastSession() {
             isOn = [defaults boolForKey:[switch_ getPreferencesKey]];
             std::vector<MemoryPatch> memoryPatches = [switch_ getMemoryPatches];
             for(int i = 0; i < memoryPatches.size(); i++) {
-                isOn ?  memoryPatches[i].Modify() :  memoryPatches[i].Restore();
+                if(isOn){
+                 memoryPatches[i].Modify();
+                } else {
+                 memoryPatches[i].Restore();
+                }
             }
             ((OffsetSwitch*)switch_).backgroundColor = isOn ? switchOnColor : clearColor;
         }
@@ -270,7 +274,11 @@ void restoreLastSession() {
     if([switch_ isKindOfClass:[OffsetSwitch class]]) {
         std::vector<MemoryPatch> memoryPatches = [switch_ getMemoryPatches];
         for(int i = 0; i < memoryPatches.size(); i++) {
-            !isOn ?  memoryPatches[i].Modify() :  memoryPatches[i].Restore();
+            if(!isOn){
+                memoryPatches[i].Modify();
+            } else {
+                memoryPatches[i].Restore();
+           }
         }
     }
 
@@ -295,17 +303,17 @@ void restoreLastSession() {
     description = description_;
     preferencesKey = hackName_;
 
-    // For each offset, we create a MemoryPatch.
-    for(int i = 0; i < offsets_.size(); i++) {
-        int offsetCount = i;
-        if(isValidHexString(bytes_[i])) {
-            std::vector<uint32_t> hexBytesVector = getHexBytesVector(bytes_[i]);
-            for(int i = 0; i < hexBytesVector.size(); i++) {
-                uint32_t hexBytes = _OSSwapInt32(hexBytesVector[i]);
-                memoryPatches.push_back(MemoryPatch(NULL,offsets_[offsetCount] + (i * 4), &hexBytes, sizeof(uint32_t)));
-            }            
-        } else {
-            [menu showPopup:@"Invalid Hex" description:[NSString stringWithFormat:@"Failing offset: 0x%llx, please re-check the hex you entered.", offsets_[offsetCount]]];
+    if(offsets_.size() != bytes_.size()){
+        [menu showPopup:@"Invalid input count" description:[NSString stringWithFormat:@"Offsets array input count (%d) is not equal to the bytes array input count (%d)", (int)offsets_.size(), (int)bytes_.size()]];
+    } else {
+        // For each offset, we create a MemoryPatch.
+        for(int i = 0; i < offsets_.size(); i++) {
+            MemoryPatch patch = MemoryPatch::createWithHex(NULL, offsets_[i], bytes_[i]);
+            if(patch.isValid()) {
+              memoryPatches.push_back(patch);
+            } else {
+              [menu showPopup:@"Invalid patch" description:[NSString stringWithFormat:@"Failing offset: 0x%llx, please re-check the hex you entered.", offsets_[i]]];
+            }
         }
     }
 
@@ -350,33 +358,6 @@ void restoreLastSession() {
 
 - (std::vector<MemoryPatch>)getMemoryPatches {
     return memoryPatches;
-}
-
-std::string getNonHexString(std::string hexString) {
-    std::string firstTwoCharacters = hexString.substr(0, 2);
-    if(firstTwoCharacters == "0x") {
-        hexString.erase(0,2);
-    }
-    hexString.erase(remove(hexString.begin(), hexString.end(), ' '), hexString.end());
-    return hexString;
-}
-
-bool isValidHexString(std::string hexString) {
-    hexString = getNonHexString(hexString);
-    if(hexString.size() == 0 || hexString.size() % 8 != 0) {
-        return false;
-    }
-    return true;
-}
-
-std::vector<uint32_t> getHexBytesVector(std::string hexString) {
-    std::vector<uint32_t> stringHexBytes;
-    std::string nonHexString = getNonHexString(hexString);
-    for(int i = 0; i <= nonHexString.size() - 1; i+=8) {
-        std::string byteString = nonHexString.substr(i, 8);
-        stringHexBytes.push_back(strtoull(byteString.c_str(), nullptr, 16));
-    }
-    return stringHexBytes;
 }
 
 @end //end of OffsetSwitch class

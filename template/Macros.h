@@ -30,14 +30,12 @@ uint64_t getRealOffset(uint64_t offset){
 
 // Patching a offset without switch.
 void patchOffset(uint64_t offset, std::string hexBytes) {
-    if(isValidHexString(hexBytes)) {
-        std::vector<uint32_t> hexBytesVector = getHexBytesVector(hexBytes); 
-        for(int i = 0; i < hexBytesVector.size(); i++) {
-            if(!writeData32(offset + (i * 4), hexBytesVector[i])) {
-                [menu showPopup:@"Something went wrong!" description:[NSString stringWithFormat:@"Something went wrong while patching this offset: %llu", offset]];
-            }
-        }           
-    } else {
-        [menu showPopup:@"Invalid Hex" description:[NSString stringWithFormat:@"Failing offset: 0x%llx, please re-check the hex you entered.", offset]];
+	MemoryPatch patch = MemoryPatch::createWithHex(NULL, offset, hexBytes);
+	if(!patch.isValid()){
+		[menu showPopup:@"Invalid patch" description:[NSString stringWithFormat:@"Failing offset: 0x%llx, please re-check the hex you entered.", offset]];
+		return;
+	}
+	if(!patch.Modify()) {
+      [menu showPopup:@"Something went wrong!" description:[NSString stringWithFormat:@"Something went wrong while patching this offset: %llu", offset]];
     }
 }
