@@ -29,9 +29,14 @@
 
 @end
 
-@interface OffsetSwitch : UIButton
+@interface OffsetSwitch : UIButton {
+	NSString *preferencesKey;
+	NSString *description;
+    UILabel *switchLabel;
+}
 
 - (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<std::string>)bytes_;
+-(void)showInfo:(UIGestureRecognizer *)gestureRec;
 
 -(NSString *)getPreferencesKey;
 -(NSString *)getDescription;
@@ -40,23 +45,19 @@
 
 @end
 
-@interface TextFieldSwitch : UIButton<UITextFieldDelegate>
+@interface TextFieldSwitch : OffsetSwitch<UITextFieldDelegate> {
+	NSString *switchValueKey;
+}
 
 - (id)initTextfieldNamed:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
 
--(NSString *)getPreferencesKey;
 -(NSString *)getSwitchValueKey;
--(NSString *)getDescription;
 
 @end
 
-@interface SliderSwitch : UIButton
+@interface SliderSwitch : TextFieldSwitch
 
 - (id)initSliderNamed:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
-
--(NSString *)getPreferencesKey;
--(NSString *)getSwitchValueKey;
--(NSString *)getDescription;
 
 @end
 

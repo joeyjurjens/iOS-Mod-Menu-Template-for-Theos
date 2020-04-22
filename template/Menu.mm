@@ -293,10 +293,7 @@ void restoreLastSession() {
 *********************************/
 
 @implementation OffsetSwitch {
-    NSString *preferencesKey;
     std::vector<MemoryPatch> memoryPatches;
-    UILabel *offsetPatchSwitch;
-    NSString *description;
 }
 
 - (id)initHackNamed:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::vector<uint64_t>)offsets_ bytes:(std::vector<std::string>)bytes_ {
@@ -322,13 +319,13 @@ void restoreLastSession() {
     self.layer.borderWidth = 0.5f;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
 
-    offsetPatchSwitch = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 50)];
-    offsetPatchSwitch.text = hackName_;
-    offsetPatchSwitch.textColor = switchTitleColor;
-    offsetPatchSwitch.font = [UIFont fontWithName:switchTitleFont size:18];
-    offsetPatchSwitch.adjustsFontSizeToFitWidth = true;
-    offsetPatchSwitch.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:offsetPatchSwitch];
+    switchLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 50)];
+    switchLabel.text = hackName_;
+    switchLabel.textColor = switchTitleColor;
+    switchLabel.font = [UIFont fontWithName:switchTitleFont size:18];
+    switchLabel.adjustsFontSizeToFitWidth = true;
+    switchLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:switchLabel];
 
     UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
     infoButton.frame = CGRectMake(menuWidth - 30, 15, 20, 20);
@@ -365,14 +362,10 @@ void restoreLastSession() {
 
 /**************************************
     TEXTFIELD SWITCH STARTS HERE!
+    - Note that this extends from OffsetSwitch.
 ***************************************/
 
 @implementation TextFieldSwitch {
-    NSString *preferencesKey;
-    NSString *switchValueKey;
-    NSString *description;
-    UILabel *textfieldSwitch;
-    UILabel *descirptionLabel;
     UITextField *textfieldValue;
 }
 
@@ -386,15 +379,15 @@ void restoreLastSession() {
     self.layer.borderWidth = 0.5f;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
 
-    textfieldSwitch = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
-    textfieldSwitch.text = hackName_;
-    textfieldSwitch.textColor = switchTitleColor;
-    textfieldSwitch.font = [UIFont fontWithName:switchTitleFont size:18];
-    textfieldSwitch.adjustsFontSizeToFitWidth = true;
-    textfieldSwitch.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:textfieldSwitch];
+    switchLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
+    switchLabel.text = hackName_;
+    switchLabel.textColor = switchTitleColor;
+    switchLabel.font = [UIFont fontWithName:switchTitleFont size:18];
+    switchLabel.adjustsFontSizeToFitWidth = true;
+    switchLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:switchLabel];
 
-    textfieldValue = [[UITextField alloc]initWithFrame:CGRectMake(menuWidth / 4 - 10, textfieldSwitch.self.bounds.origin.x - 5 + textfieldSwitch.self.bounds.size.height, menuWidth / 2, 20)];
+    textfieldValue = [[UITextField alloc]initWithFrame:CGRectMake(menuWidth / 4 - 10, switchLabel.self.bounds.origin.x - 5 + switchLabel.self.bounds.size.height, menuWidth / 2, 20)];
     textfieldValue.layer.borderWidth = 2.0f;
     textfieldValue.layer.borderColor = inputBorderColor_.CGColor;
     textfieldValue.layer.cornerRadius = 10.0f;
@@ -421,13 +414,6 @@ void restoreLastSession() {
     return self;
 }
 
--(void)showInfo:(UIGestureRecognizer *)gestureRec {
-    if(gestureRec.state == UIGestureRecognizerStateEnded) {
-        [menu showPopup:[self getPreferencesKey] description:[self getDescription]];
-        menu.layer.opacity = 0.0f;
-    }
-}
-
 // so when click "return" the keyboard goes way, got it from internet. Common thing apparantly
 -(BOOL)textFieldShouldReturn:(UITextField*)textfieldValue_ {
     switchValueKey = [[self getPreferencesKey] stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
@@ -437,31 +423,19 @@ void restoreLastSession() {
     return true;
 }
 
--(NSString *)getPreferencesKey {
-    return preferencesKey;
-}
-
 -(NSString *)getSwitchValueKey {
     return switchValueKey;
 }
 
--(NSString *)getDescription {
-    return description;
-}
 @end // end of TextFieldSwitch Class
 
 
 /*******************************
     SLIDER SWITCH STARTS HERE!
+    - Note that this extends from TextFieldSwitch
  *******************************/
 
 @implementation SliderSwitch {
-    NSString *hackName;
-    NSString *preferencesKey;
-    NSString *switchValueKey;
-    NSString *description;
-    UILabel *sliderSwitch;
-    UILabel *descirptionLabel;
     UISlider *sliderValue;
     float valueOfSlider;
 }
@@ -476,15 +450,15 @@ void restoreLastSession() {
     self.layer.borderWidth = 0.5f;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
 
-    sliderSwitch = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
-    sliderSwitch.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
-    sliderSwitch.textColor = switchTitleColor;
-    sliderSwitch.font = [UIFont fontWithName:switchTitleFont size:18];
-    sliderSwitch.adjustsFontSizeToFitWidth = true;
-    sliderSwitch.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:sliderSwitch];
+    switchLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, menuWidth - 60, 30)];
+    switchLabel.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
+    switchLabel.textColor = switchTitleColor;
+    switchLabel.font = [UIFont fontWithName:switchTitleFont size:18];
+    switchLabel.adjustsFontSizeToFitWidth = true;
+    switchLabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:switchLabel];
 
-    sliderValue = [[UISlider alloc]initWithFrame:CGRectMake(menuWidth / 4 - 20, sliderSwitch.self.bounds.origin.x - 4 + sliderSwitch.self.bounds.size.height, menuWidth / 2 + 20, 20)];
+    sliderValue = [[UISlider alloc]initWithFrame:CGRectMake(menuWidth / 4 - 20, switchLabel.self.bounds.origin.x - 4 + switchLabel.self.bounds.size.height, menuWidth / 2 + 20, 20)];
     sliderValue.thumbTintColor = sliderColor_;
     sliderValue.minimumTrackTintColor = switchTitleColor;
     sliderValue.maximumTrackTintColor = switchTitleColor;
@@ -497,7 +471,7 @@ void restoreLastSession() {
     // get value from the plist & show it (if it's not empty).
     if([[NSUserDefaults standardUserDefaults] objectForKey:switchValueKey] != nil) {
         sliderValue.value = [[NSUserDefaults standardUserDefaults] floatForKey:switchValueKey];
-        sliderSwitch.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
+        switchLabel.text = [NSString stringWithFormat:@"%@ %.2f", hackName_, sliderValue.value];
     }
 
     UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
@@ -513,29 +487,10 @@ void restoreLastSession() {
     return self;
 }
 
--(void)showInfo:(UIGestureRecognizer *)gestureRec {
-    if(gestureRec.state == UIGestureRecognizerStateEnded) {
-        [menu showPopup:[self getPreferencesKey] description:[self getDescription]];
-        menu.layer.opacity = 0.0f;
-    }
-}
-
 -(void)sliderValueChanged:(UISlider *)slider_ {
     switchValueKey = [[self getPreferencesKey] stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
-    sliderSwitch.text = [NSString stringWithFormat:@"%@ %.2f", [self getPreferencesKey], slider_.value];
+    switchLabel.text = [NSString stringWithFormat:@"%@ %.2f", [self getPreferencesKey], slider_.value];
     [defaults setFloat:slider_.value forKey:[self getSwitchValueKey]];
-}
-
--(NSString *)getPreferencesKey {
-    return preferencesKey;
-}
-
--(NSString *)getSwitchValueKey {
-    return switchValueKey;
-}
-
--(NSString *)getDescription {
-    return description;
 }
 
 @end // end of SliderSwitch class
