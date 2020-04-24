@@ -37,6 +37,8 @@ float scrollViewHeight = 0;
 BOOL hasRestoredLastSession = false;
 UIButton *menuButton;
 
+const char *frameworkName = NULL;
+
 UIWindow *mainWindow;
 
 
@@ -285,6 +287,14 @@ void restoreLastSession() {
     // Update switch background color and pref value.
     [self changeSwitchBackground:switch_ isSwitchOn:isOn];
 }
+
+-(void)setFrameworkName:(const char *)name_ {
+    frameworkName = name_;
+}
+
+-(const char *)getFrameworkName {
+    return frameworkName;
+}
 @end // End of menu class!
 
 
@@ -305,7 +315,7 @@ void restoreLastSession() {
     } else {
         // For each offset, we create a MemoryPatch.
         for(int i = 0; i < offsets_.size(); i++) {
-            MemoryPatch patch = MemoryPatch::createWithHex(NULL, offsets_[i], bytes_[i]);
+            MemoryPatch patch = MemoryPatch::createWithHex([menu getFrameworkName], offsets_[i], bytes_[i]);
             if(patch.isValid()) {
               memoryPatches.push_back(patch);
             } else {

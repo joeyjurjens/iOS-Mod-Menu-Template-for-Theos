@@ -63,6 +63,11 @@ void setup() {
      then replace that string with mine.
 ************************************************************************************************************/
 void setupMenu() {
+
+  // If a game uses a framework as base executable, you can enter the name here.
+  // For example: UnityFramework, in that case you have to replace NULL with "UnityFramework" (note the quotes)
+  [menu setFrameworkName:NULL];
+
   menu = [[Menu alloc]  
             initWithTitle:@"@@APPNAME@@ - Mod Menu"
             titleColor:[UIColor whiteColor]

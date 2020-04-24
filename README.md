@@ -48,7 +48,11 @@ In order to get a base64 string from the image, upload the image here: https://w
 
 Images 50x50 are recommended, you can get a sample of my images by copying the standard(in tweak.xm) base64 string & use this website to show the picture: https://base64.guru/converter/decode/image
 
-
+<b> Setting a framework as executable </b>
+You can set this in the function setupMenu() inside Tweak.xm
+```obj-c
+[menu setFrameworkName:"FrameworkName"];
+```
 
 <b> Patching a offset without switch: </b>
 ```c
