@@ -58,6 +58,7 @@ endif
 include $(THEOS_MAKE_PATH)/tweak.mk
 
 internal-package-check::
+	@chmod 777 versionCheck.sh # Give permission to script 	
 	@./versionCheck.sh # Script to verify template's current version
 
 after-install::
