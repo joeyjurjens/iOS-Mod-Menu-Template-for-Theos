@@ -21,6 +21,10 @@ extern Switches *switches;
 #define HOOK(offset, ptr, orig) MSHookFunction((void *)getRealOffset(offset), (void *)ptr, (void **)&orig)
 #define HOOK_NO_ORIG(offset, ptr) MSHookFunction((void *)getRealOffset(offset), (void *)ptr, NULL)
 
+#define HOOKSYM(sym, ptr, org) MSHookFunction((void*)dlsym((void *)-2, sym), (void *)ptr, (void **)&org)
+#define HOOKSYM_NO_ORIG(sym, ptr)  MSHookFunction((void*)dlsym((void *)-2, sym), (void *)ptr, NULL)
+#define getSym(symName) dlsym((void *)-2, symName)
+
 // Convert hex color to UIColor, usage: For the color #BD0000 you'd use: UIColorFromHex(0xBD0000)
 #define UIColorFromHex(hexColor) [UIColor colorWithRed:((float)((hexColor & 0xFF0000) >> 16))/255.0 green:((float)((hexColor & 0xFF00) >> 8))/255.0 blue:((float)(hexColor & 0xFF))/255.0 alpha:1.0]
 
