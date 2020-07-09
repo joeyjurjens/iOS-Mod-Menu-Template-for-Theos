@@ -69,6 +69,13 @@ int get_Gems(void *this_) {
   return old_get_Gems(this_);
 }
 
+void (*old_gl_draw_elements)(GLenum mode, GLsizei count, GLenum type, const void *indices);
+
+void gl_draw_elements(GLenum mode, GLsizei count, GLenum type, const void *indices) {
+  // This hook is absolutely useless. Just to show a PoC
+  old_gl_draw_elements(mode, count type, indices);
+}
+
 void setup() {
 
   //public virtual void UpdateCharacter(float deltaTime); // RVA: 0x10194DE30 Offset: 0x194DE30 -> CharacterBase
@@ -79,6 +86,9 @@ void setup() {
 
   //public int get_Gems(); // RVA: 0x1018A3F24 Offset: 0x18A3F24
   HOOK(0x1018A3F24, get_Gems, old_get_Gems);
+  
+  // This entry is fictional but is just there to show a PoC.
+  HOOKSYM("glDrawElements", gl_draw_elements, old_gl_draw_elements);
 
     [switches addTextfieldSwitch:@"Custom Coins:"
                 description:@"Here you can enter your own coins amount!"
