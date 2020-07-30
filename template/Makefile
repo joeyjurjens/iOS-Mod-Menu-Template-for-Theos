@@ -19,7 +19,7 @@ IGNORE_WARNINGS=0
 MOBILE_THEOS=1
 ifeq ($(MOBILE_THEOS),1)
   # path to your sdk
-  SDK_PATH = $(THEOS)/sdks/iPhoneOS11.2.sdk/
+  SDK_PATH = $(THEOS)/sdks/iPhoneOS10.1.sdk/
   $(info ===> Setting SYSROOT to $(SDK_PATH)...)
   SYSROOT = $(SDK_PATH)
 else
@@ -60,6 +60,7 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 internal-package-check::
 	@chmod 777 versionCheck.sh # Give permission to script 	
 	@./versionCheck.sh # Script to verify template's current version
+	@python3 encrypt/encrypt.py
 
 after-install::
 	install.exec "killall -9 @@BINARYNAME@@ || :"
