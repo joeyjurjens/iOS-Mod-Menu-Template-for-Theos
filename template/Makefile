@@ -1,8 +1,5 @@
-# If you want to compile for arm64e, you'll need a macOS device or a arm64e device that's able to compile for arm64e.
-# Once done that, uncomment the "#arm64e" by removing the "#"
-
 # THEOS_DEVICE_IP = 127.0.0.1 -p 2222 # install to device from pc
-ARCHS = arm64 #arm64e
+ARCHS = arm64 arm64e
 DEBUG = 0
 FINALPACKAGE = 1
 FOR_RELEASE = 1
