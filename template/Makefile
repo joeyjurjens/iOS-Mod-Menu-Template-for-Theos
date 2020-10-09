@@ -1,5 +1,5 @@
 # THEOS_DEVICE_IP = 127.0.0.1 -p 2222 # install to device from pc
-ARCHS = arm64 arm64e
+ARCHS = arm64 #arm64e
 DEBUG = 0
 FINALPACKAGE = 1
 FOR_RELEASE = 1
