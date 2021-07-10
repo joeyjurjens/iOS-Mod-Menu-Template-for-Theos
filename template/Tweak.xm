@@ -8,41 +8,41 @@ void setup() {
   //See sample.xm for a example Tweak.xm
 
   //patching offsets directly, without switch
-  patchOffset(0x1002DB3C8, "0xC0035FD6");
-  patchOffset(0x10020D2D4, "0x00008052C0035FD6");
+  patchOffset(OBFUSCATE("0x1002DB3C8"), OBFUSCATE("0xC0035FD6"));
+  patchOffset(OBFUSCATE("0x10020D2D4"), OBFUSCATE("0x00008052C0035FD6"));
 
   // You can write as many bytes as you want to an offset
-  patchOffset(0x10020D3A8, "0x00F0271E0008201EC0035FD6");
+  patchOffset(OBFUSCATE("0x10020D3A8"), OBFUSCATE("0x00F0271E0008201EC0035FD6"));
   // or  
-  patchOffset(0x10020D3A8, "00F0271E0008201EC0035FD6");
+  patchOffset(OBFUSCATE("0x10020D3A8"), OBFUSCATE("00F0271E0008201EC0035FD6"));
   // spaces are fine too
-  patchOffset(0x10020D3A8, "00 F0 27 1E 00 08 20 1E C0 03 5F D6");
+  patchOffset(OBFUSCATE("0x10020D3A8"), OBFUSCATE("00 F0 27 1E 00 08 20 1E C0 03 5F D6"));
 
 
   // Empty switch - usefull with hooking
-  [switches addSwitch:@"Masskill"
-              description:@"Teleport all enemies to you without them knowing"];
+  [switches addSwitch:OBFUSCATE("Masskill")
+              description:OBFUSCATE("Teleport all enemies to you without them knowing")];
 
   // Offset Switch with one patch
-  [switches addOffsetSwitch:@"God Mode"
-              description:@"You can't die"
-                offsets:{0x1005AB148}
-                  bytes:{"0x00E0BF12C0035FD6"}];
+  [switches addOffsetSwitch:OBFUSCATE("God Mode")
+              description:OBFUSCATE("You can't die")
+                offsets:{OBFUSCATE("0x1005AB148")}
+                  bytes:{OBFUSCATE("0x00E0BF12C0035FD6")}];
 
   // Offset switch with multiple patches
-  [switches addOffsetSwitch:@"One Hit Kill"
-              description:@"Enemy will die instantly"
-                offsets:{0x1001BB2C0, 0x1002CB3B0, 0x1002CB3B8}
-                  bytes:{"0x00E0BF12C0035FD6", "0xC0035FD6", "0x00F0271E0008201EC0035FD6"}];
+  [switches addOffsetSwitch:OBFUSCATE("One Hit Kill")
+              description:OBFUSCATE("Enemy will die instantly")
+                offsets:{OBFUSCATE("0x1001BB2C0"), OBFUSCATE("0x1002CB3B0"), OBFUSCATE("0x1002CB3B8")}
+                  bytes:{OBFUSCATE("0x00E0BF12C0035FD6"), OBFUSCATE("0xC0035FD6"), OBFUSCATE("0x00F0271E0008201EC0035FD6")}];
 
   // Textfield Switch - used in hooking
-  [switches addTextfieldSwitch:@"Custom Gold"
-              description:@"Here you can enter your own gold amount"
+  [switches addTextfieldSwitch:OBFUSCATE("Custom Gold")
+              description:OBFUSCATE("Here you can enter your own gold amount")
                 inputBorderColor:UIColorFromHex(0xBD0000)];
 
   // Slider Switch - used in hooking
-  [switches addSliderSwitch:@"Custom Move Speed"
-              description:@"Set your custom move speed"
+  [switches addSliderSwitch:OBFUSCATE("Custom Move Speed")
+              description:OBFUSCATE("Set your custom move speed")
                 minimumValue:0
                   maximumValue:10
                     sliderColor:UIColorFromHex(0xBD0000)];
@@ -69,10 +69,10 @@ void setupMenu() {
   [menu setFrameworkName:NULL];
 
   menu = [[Menu alloc]  
-            initWithTitle:@"@@APPNAME@@ - Mod Menu"
+            initWithTitle:OBFUSCATE("@@APPNAME@@ - Mod Menu")
             titleColor:[UIColor whiteColor]
-            titleFont:@"Copperplate-Bold"
-            credits:@"This Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!"
+            titleFont:OBFUSCATE("Copperplate-Bold")
+            credits:OBFUSCATE("This Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!")
             headerColor:UIColorFromHex(0xBD0000)
             switchOffColor:[UIColor darkGrayColor]
             switchOnColor:UIColorFromHex(0x00ADF2)
