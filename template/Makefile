@@ -36,20 +36,20 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = @@PROJECTNAME@@
 
-@@PROJECTNAME@@_CFLAGS = -fobjc-arc
-@@PROJECTNAME@@_CCFLAGS = -std=c++11 -fno-rtti -fno-exceptions -DNDEBUG
+$(TWEAK_NAME)_CFLAGS = -fobjc-arc
+$(TWEAK_NAME)_CCFLAGS = -std=c++11 -fno-rtti -fno-exceptions -DNDEBUG
 
 ifeq ($(IGNORE_WARNINGS),1)
-  @@PROJECTNAME@@_CFLAGS += -w
-  @@PROJECTNAME@@_CCFLAGS += -w
+  $(TWEAK_NAME)_CFLAGS += -w
+  $(TWEAK_NAME)_CCFLAGS += -w
 endif
 
 
-@@PROJECTNAME@@_FILES = Tweak.xm $(MENU_SRC) $(KITTYMEMORY_SRC) $(SCLALERTVIEW_SRC)
+$(TWEAK_NAME)_FILES = Tweak.xm $(MENU_SRC) $(KITTYMEMORY_SRC) $(SCLALERTVIEW_SRC)
 
-@@PROJECTNAME@@_LIBRARIES += substrate
+$(TWEAK_NAME)_LIBRARIES += substrate
 
-@@PROJECTNAME@@_FRAMEWORKS = $(PROJ_COMMON_FRAMEWORKS)
+$(TWEAK_NAME)_FRAMEWORKS = $(PROJ_COMMON_FRAMEWORKS)
 # GO_EASY_ON_ME = 1
 
 include $(THEOS_MAKE_PATH)/tweak.mk
