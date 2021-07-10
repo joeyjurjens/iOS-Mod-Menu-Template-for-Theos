@@ -107,7 +107,7 @@ void setup() {
                 description:OBFUSCATE("Kills the enemy. Disable it after using, then use it again when you want to.")];    
 
     [switches addOffsetSwitch:OBFUSCATE("No Shity Ads")
-                description:@"Title says it all ^_^"
+                description:OBFUSCATE("Title says it all ^_^")
                   offsets:{OBFUSCATE("0x10184866C")}
                     bytes:{OBFUSCATE("0x20008052C0035FD6")}];                  
 
