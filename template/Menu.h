@@ -20,7 +20,7 @@
 
 @interface Menu : UIView
 
--(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_;
+-(id)initWithTitle:(const char *)title_ titleColor:(UIColor *)titleColor_ titleFont:(const char *)titleFont_ credits:(const char *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(const char *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_;
 -(void)setFrameworkName:(const char *)name_;
 -(const char *)getFrameworkName;
 
@@ -66,15 +66,15 @@
 
 @interface Switches : UIButton
 
--(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_;
+-(void)addSwitch:(const char *)hackName_ description:(const char *)description_;
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<std::string>)bytes_;
+- (void)addOffsetSwitch:(const char *)hackName_ description:(const char *)description_ offsets:(std::initializer_list< const char * >)offsets_ bytes:(std::initializer_list< const char * >)bytes_;
 
-- (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
+- (void)addTextfieldSwitch:(const char *)hackName_ description:(const char *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
 
-- (void)addSliderSwitch:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
+- (void)addSliderSwitch:(const char *)hackName_ description:(const char *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
 
-- (NSString *)getValueFromSwitch:(NSString *)name;
--(bool)isSwitchOn:(NSString *)switchName;
+- (NSString *)getValueFromSwitch:(const char *)name;
+-(bool)isSwitchOn:(const char *)switchName;
 
 @end
