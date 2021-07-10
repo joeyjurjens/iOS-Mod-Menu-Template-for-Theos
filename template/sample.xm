@@ -11,7 +11,7 @@
 
 
 //public void KillCharacter(); // RVA: 0x101949634 Offset: 0x1949634
-void(*KillCharacter)(void *this_) = (void(*) (void *))getRealOffset(0x101949634);
+void(*KillCharacter)(void *this_) = (void(*) (void *))getAbsoluteOffset("0x101949634");
 
 bool shouldActivateKillAll = true;
 
@@ -20,13 +20,13 @@ void CharacterBase_UpdateCharacter(void *characterBase, float deltaTime) {
 
   //private bool isAI; // 0x221
   //private bool <IsMultiplayerEnemy>k__BackingField; // 0x228
-  bool isEnemy = *(bool*)((uint64_t)characterBase + 0x221);
-  bool IsMultiplayerEnemy = *(bool*)((uint64_t)characterBase + 0x228);
+  bool isEnemy = *(bool*)((uint64_t)characterBase + OBFUSCATEHEX("0x221"));
+  bool IsMultiplayerEnemy = *(bool*)((uint64_t)characterBase + OBFUSCATEHEX("0x228"));
 
   if(isEnemy || IsMultiplayerEnemy) {
 
     // One Hit Kill
-    if([switches isSwitchOn:@"Kill Enemy"]) {
+    if([switches isSwitchOn:OBFUSCATE("Kill Enemy")]) {
       if(shouldActivateKillAll) {
         KillCharacter(characterBase);
         shouldActivateKillAll = false;
@@ -38,9 +38,9 @@ void CharacterBase_UpdateCharacter(void *characterBase, float deltaTime) {
 
   if(!isEnemy && !IsMultiplayerEnemy) {
     
-    if([switches isSwitchOn:@"God Mode"]) {
+    if([switches isSwitchOn:OBFUSCATE("God Mode")]) {
       //protected float health; // 0x48
-      *(float*)((uint64_t)characterBase + 0x48) = 999999999.0f;
+      *(float*)((uint64_t)characterBase + OBFUSCATEHEX("0x48")) = 999999999.0f;
     }
   }
 
@@ -50,9 +50,9 @@ void CharacterBase_UpdateCharacter(void *characterBase, float deltaTime) {
 int(*old_get_coins)(void *this_);
 int get_coins(void *this_) {
 
-  int userAmount = [[switches getValueFromSwitch:@"Custom Coins:"] intValue];
+  int userAmount = [[switches getValueFromSwitch:OBFUSCATE("Custom Coins:")] intValue];
 
-  if([switches isSwitchOn:@"Custom Coins:"]) {
+  if([switches isSwitchOn:OBFUSCATE("Custom Coins:")]) {
     return userAmount;
   }
   return old_get_coins(this_);
@@ -61,9 +61,9 @@ int get_coins(void *this_) {
 int(*old_get_Gems)(void *this_);
 int get_Gems(void *this_) {
 
-  int userAmount = [[switches getValueFromSwitch:@"Custom Gems:"] intValue];
+  int userAmount = [[switches getValueFromSwitch:OBFUSCATE("Custom Gems:")] intValue];
 
-  if([switches isSwitchOn:@"Custom Coins:"]) {
+  if([switches isSwitchOn:OBFUSCATE("Custom Coins:")]) {
     return userAmount;
   }
   return old_get_Gems(this_);
@@ -78,36 +78,38 @@ void gl_draw_elements(GLenum mode, GLsizei count, GLenum type, const void *indic
 
 void setup() {
 
+  // All HOOK/HOOKSYM macros are encrypted at compile time
+
   //public virtual void UpdateCharacter(float deltaTime); // RVA: 0x10194DE30 Offset: 0x194DE30 -> CharacterBase
-  HOOK(0x10194DE30, CharacterBase_UpdateCharacter, old_CharacterBase_UpdateCharacter);
+  HOOK("0x10194DE30", CharacterBase_UpdateCharacter, old_CharacterBase_UpdateCharacter);
 
   //public int get_Coins(); // RVA: 0x1018A3DA0 Offset: 0x18A3DA0
-  HOOK(0x1018A3DA0, get_coins, old_get_coins);
+  HOOK("0x1018A3DA0", get_coins, old_get_coins);
 
   //public int get_Gems(); // RVA: 0x1018A3F24 Offset: 0x18A3F24
-  HOOK(0x1018A3F24, get_Gems, old_get_Gems);
+  HOOK("0x1018A3F24", get_Gems, old_get_Gems);
   
   // This entry is fictional but is just there to show a PoC.
   HOOKSYM("glDrawElements", gl_draw_elements, old_gl_draw_elements);
 
-    [switches addTextfieldSwitch:@"Custom Coins:"
-                description:@"Here you can enter your own coins amount!"
+    [switches addTextfieldSwitch:OBFUSCATE("Custom Coins:")
+                description:OBFUSCATE("Here you can enter your own coins amount!")
                   inputBorderColor:[UIColor colorWithRed:0.74 green:0.00 blue:0.00 alpha:1.0]];
 
-    [switches addTextfieldSwitch:@"Custom Gems:"
-                description:@"Here you can enter your own coins amount!"
+    [switches addTextfieldSwitch:OBFUSCATE("Custom Gems:")
+                description:OBFUSCATE("Here you can enter your own coins amount!")
                   inputBorderColor:[UIColor colorWithRed:0.74 green:0.00 blue:0.00 alpha:1.0]];                    
 
-    [switches addSwitch:@"God Mode"
-                description:@"You can't die!"];
+    [switches addSwitch:OBFUSCATE("God Mode")
+                description:OBFUSCATE("You can't die!")];
 
-    [switches addSwitch:@"Kill Enemy"
-                description:@"Kills the enemy. Disable it after using, then use it again when you want to."];    
+    [switches addSwitch:OBFUSCATE("Kill Enemy")
+                description:OBFUSCATE("Kills the enemy. Disable it after using, then use it again when you want to.")];    
 
-    [switches addOffsetSwitch:@"No Shity Ads"
+    [switches addOffsetSwitch:OBFUSCATE("No Shity Ads")
                 description:@"Title says it all ^_^"
-                  offsets:{0x10184866C}
-                    bytes:{"0x20008052C0035FD6"}];                  
+                  offsets:{OBFUSCATE("0x10184866C")}
+                    bytes:{OBFUSCATE("0x20008052C0035FD6")}];                  
 
 
 }
@@ -128,14 +130,14 @@ void setup() {
 ************************************************************************************************************/
 void setupMenu() {
   menu = [[Menu alloc]  
-            initWithTitle:@"Bowmasters - Mod Menu"
+            initWithTitle:OBFUSCATE("Bowmasters - Mod Menu")
             titleColor:[UIColor whiteColor]
-            titleFont:@"Copperplate-Bold"
-            credits:@"This Mod Menu has been made by Ted2, do not share this without proper credits and my permission. \n\nEnjoy!"
+            titleFont:OBFUSCATE("Copperplate-Bold")
+            credits:OBFUSCATE("This Mod Menu has been made by Ted2, do not share this without proper credits and my permission. \n\nEnjoy!")
             headerColor:UIColorFromHex(0xBD0000)
             switchOffColor:[UIColor darkGrayColor]
             switchOnColor:UIColorFromHex(0x00ADF2)
-            switchTitleFont:@"Copperplate-Bold"
+            switchTitleFont:OBFUSCATE("Copperplate-Bold")
             switchTitleColor:[UIColor whiteColor]
             infoButtonColor:UIColorFromHex(0xBD0000)
             maxVisibleSwitches:4 // Less than max -> blank space, more than max -> you can scroll!
