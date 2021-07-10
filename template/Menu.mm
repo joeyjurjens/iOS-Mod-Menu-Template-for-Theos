@@ -512,37 +512,46 @@ void restoreLastSession() {
 @implementation Switches
 
 
--(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_ {
-    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:std::vector<uint64_t>{} bytes:std::vector<std::string>{}];
+-(void)addSwitch:(const char *)hackName_ description:(const char *)description_ {
+    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:@(hackName_) description:@(description_) offsets:std::vector<uint64_t>{} bytes:std::vector<std::string>{}];
     [menu addSwitchToMenu:offsetPatch];
 
 }
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<std::string>)bytes_ {
-    std::vector<uint64_t> offsetVector;
-    std::vector<std::string> bytesVector;
+- (void)addOffsetSwitch:(const char *)hackName_ description:(const char *)description_ offsets:(std::initializer_list< const char * >)offsets_ bytes:(std::initializer_list< const char * >)bytes_ {
+    std::vector< const char * > offsetVector;
+    std::vector< const char * > bytesVector;
 
     offsetVector.insert(offsetVector.begin(), offsets_.begin(), offsets_.end());
     bytesVector.insert(bytesVector.begin(), bytes_.begin(), bytes_.end());
 
-    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:hackName_ description:description_ offsets:offsetVector bytes:bytesVector];
+    std::vector<uint64_t>    c_offsetVector;
+    std::vector<std::string> c_bytesVector;
+
+    //forloop should be fine
+    for(int i = 0; i < offsets_.size(); i++) {
+        c_offsetVector.push_back(strtoull(offsetVector[i], NULL, 0)); // convert back
+        c_bytesVector.push_back(std::string(bytesVector[i]));         // convert back
+    }
+
+    OffsetSwitch *offsetPatch = [[OffsetSwitch alloc]initHackNamed:@(hackName_) description:@(description_) offsets:c_offsetVector bytes:c_bytesVector];
     [menu addSwitchToMenu:offsetPatch];
 }
 
-- (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_ {
-    TextFieldSwitch *textfieldSwitch = [[TextFieldSwitch alloc]initTextfieldNamed:hackName_ description:description_ inputBorderColor:inputBorderColor_];
+- (void)addTextfieldSwitch:(const char *)hackName_ description:(const char *)description_ inputBorderColor:(UIColor *)inputBorderColor_ {
+    TextFieldSwitch *textfieldSwitch = [[TextFieldSwitch alloc]initTextfieldNamed:@(hackName_) description:@(description_) inputBorderColor:inputBorderColor_];
     [menu addSwitchToMenu:textfieldSwitch];
 }
 
-- (void)addSliderSwitch:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_ {
-    SliderSwitch *sliderSwitch = [[SliderSwitch alloc] initSliderNamed:hackName_ description:description_ minimumValue:minimumValue_ maximumValue:maximumValue_ sliderColor:sliderColor_];
+- (void)addSliderSwitch:(const char *)hackName_ description:(const char *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_ {
+    SliderSwitch *sliderSwitch = [[SliderSwitch alloc] initSliderNamed:@(hackName_) description:@(description_) minimumValue:minimumValue_ maximumValue:maximumValue_ sliderColor:sliderColor_];
     [menu addSwitchToMenu:sliderSwitch];
 }
 
-- (NSString *)getValueFromSwitch:(NSString *)name {
+- (NSString *)getValueFromSwitch:(const char *)name {
 
     //getting the correct key for the saved input.
-    NSString *correctKey =  [name stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
+    NSString *correctKey =  [@(name) stringByApplyingTransform:NSStringTransformLatinToCyrillic reverse:false];
 
     if([[NSUserDefaults standardUserDefaults] objectForKey:correctKey]) {
         return [[NSUserDefaults standardUserDefaults] objectForKey:correctKey];
@@ -555,8 +564,8 @@ void restoreLastSession() {
     return 0;
 }
 
--(bool)isSwitchOn:(NSString *)switchName {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:switchName];
+-(bool)isSwitchOn:(const char *)switchName {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@(switchName)];
 }
 
 @end
