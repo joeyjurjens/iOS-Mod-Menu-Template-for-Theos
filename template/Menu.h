@@ -66,15 +66,15 @@
 
 @interface Switches : UIButton
 
--(void)addSwitch:(NSString *)hackName_ description:(NSString *)description_;
+-(void)addSwitch:(const char *)hackName_ description:(const char *)description_;
 
-- (void)addOffsetSwitch:(NSString *)hackName_ description:(NSString *)description_ offsets:(std::initializer_list<uint64_t>)offsets_ bytes:(std::initializer_list<std::string>)bytes_;
+- (void)addOffsetSwitch:(const char *)hackName_ description:(const char *)description_ offsets:(std::initializer_list< const char * >)offsets_ bytes:(std::initializer_list< const char * >)bytes_;
 
-- (void)addTextfieldSwitch:(NSString *)hackName_ description:(NSString *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
+- (void)addTextfieldSwitch:(const char *)hackName_ description:(const char *)description_ inputBorderColor:(UIColor *)inputBorderColor_;
 
-- (void)addSliderSwitch:(NSString *)hackName_ description:(NSString *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
+- (void)addSliderSwitch:(const char *)hackName_ description:(const char *)description_ minimumValue:(float)minimumValue_ maximumValue:(float)maximumValue_ sliderColor:(UIColor *)sliderColor_;
 
-- (NSString *)getValueFromSwitch:(NSString *)name;
--(bool)isSwitchOn:(NSString *)switchName;
+- (NSString *)getValueFromSwitch:(const char *)name;
+-(bool)isSwitchOn:(const char *)switchName;
 
 @end
