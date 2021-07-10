@@ -48,14 +48,14 @@ Menu *menu = [[Menu alloc]init];
 Switches *switches = [[Switches alloc]init];
 
 
--(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
+-(id)initWithTitle:(const char *)title_ titleColor:(UIColor *)titleColor_ titleFont:(const char *)titleFont_ credits:(const char *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(const char *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
     mainWindow = [UIApplication sharedApplication].keyWindow;
     defaults = [NSUserDefaults standardUserDefaults];
 
     menuWidth = menuWidth_;
     switchOnColor = switchOnColor_;
-    credits = credits_;
-    switchTitleFont = switchTitleFont_;
+    credits = @(credits_);
+    switchTitleFont = @(switchTitleFont_);
     switchTitleColor = switchTitleColor_;
     infoButtonColor = infoButtonColor_;
     menuButtonBase64 = menuButtonBase64_;
@@ -91,9 +91,9 @@ Switches *switches = [[Switches alloc]init];
     scrollViewX = CGRectGetMinX(scrollView.self.bounds);
 
     self.menuTitle = [[UILabel alloc]initWithFrame:CGRectMake(55, -2, menuWidth_ - 60, 50)];
-    self.menuTitle.text = title_;
+    self.menuTitle.text = @(title_);
     self.menuTitle.textColor = titleColor_;
-    self.menuTitle.font = [UIFont fontWithName:titleFont_ size:30.0f];
+    self.menuTitle.font = [UIFont fontWithName:@(titleFont_) size:30.0f];
     self.menuTitle.adjustsFontSizeToFitWidth = true;
     self.menuTitle.textAlignment = NSTextAlignmentCenter;
     [self.header addSubview: self.menuTitle];
