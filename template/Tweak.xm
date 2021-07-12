@@ -5,47 +5,62 @@
 ***********************************************************/
 void setup() {
 
-  //See sample.xm for a example Tweak.xm
-
   //patching offsets directly, without switch
-  patchOffset(0x1002DB3C8, "0xC0035FD6");
-  patchOffset(0x10020D2D4, "0x00008052C0035FD6");
+  patchOffset(ENCRYPTOFFSET("0x1002DB3C8"), ENCRYPTHEX("0xC0035FD6"));
+  patchOffset(ENCRYPTOFFSET("0x10020D2D4"), ENCRYPTHEX("0x00008052C0035FD6"));
 
   // You can write as many bytes as you want to an offset
-  patchOffset(0x10020D3A8, "0x00F0271E0008201EC0035FD6");
+  patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("0x00F0271E0008201EC0035FD6"));
   // or  
-  patchOffset(0x10020D3A8, "00F0271E0008201EC0035FD6");
+  patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("00F0271E0008201EC0035FD6"));
   // spaces are fine too
-  patchOffset(0x10020D3A8, "00 F0 27 1E 00 08 20 1E C0 03 5F D6");
+  patchOffset(ENCRYPTOFFSET("0x10020D3A8"), ENCRYPTHEX("00 F0 27 1E 00 08 20 1E C0 03 5F D6"));
 
 
   // Empty switch - usefull with hooking
-  [switches addSwitch:@"Masskill"
-              description:@"Teleport all enemies to you without them knowing"];
+  [switches addSwitch:NSSENCRYPT("Masskill")
+    description:NSSENCRYPT("Teleport all enemies to you without them knowing")
+  ];
 
   // Offset Switch with one patch
-  [switches addOffsetSwitch:@"God Mode"
-              description:@"You can't die"
-                offsets:{0x1005AB148}
-                  bytes:{"0x00E0BF12C0035FD6"}];
+  [switches addOffsetSwitch:NSSENCRYPT("God Mode")
+    description:NSSENCRYPT("You can't die")
+    offsets: {
+      ENCRYPTOFFSET("0x1005AB148")
+    }
+    bytes: {
+      ENCRYPTHEX("0x00E0BF12C0035FD6")
+    }
+  ];
 
   // Offset switch with multiple patches
-  [switches addOffsetSwitch:@"One Hit Kill"
-              description:@"Enemy will die instantly"
-                offsets:{0x1001BB2C0, 0x1002CB3B0, 0x1002CB3B8}
-                  bytes:{"0x00E0BF12C0035FD6", "0xC0035FD6", "0x00F0271E0008201EC0035FD6"}];
+  [switches addOffsetSwitch:NSSENCRYPT("One Hit Kill")
+    description:NSSENCRYPT("Enemy will die instantly")
+    offsets: {
+      ENCRYPTOFFSET("0x1001BB2C0"),
+      ENCRYPTOFFSET("0x1002CB3B0"),
+      ENCRYPTOFFSET("0x1002CB3B8")
+    }
+    bytes: {
+      ENCRYPTHEX("0x00E0BF12C0035FD6"),
+      ENCRYPTHEX("0xC0035FD6"),
+      ENCRYPTHEX("0x00F0271E0008201EC0035FD6")
+    }
+  ];
 
   // Textfield Switch - used in hooking
-  [switches addTextfieldSwitch:@"Custom Gold"
-              description:@"Here you can enter your own gold amount"
-                inputBorderColor:UIColorFromHex(0xBD0000)];
+  [switches addTextfieldSwitch:NSSENCRYPT("Custom Gold")
+    description:NSSENCRYPT("Here you can enter your own gold amount")
+    inputBorderColor:UIColorFromHex(0xBD0000)
+  ];
 
   // Slider Switch - used in hooking
-  [switches addSliderSwitch:@"Custom Move Speed"
-              description:@"Set your custom move speed"
-                minimumValue:0
-                  maximumValue:10
-                    sliderColor:UIColorFromHex(0xBD0000)];
+  [switches addSliderSwitch:NSSENCRYPT("Custom Move Speed")
+    description:NSSENCRYPT("Set your custom move speed")
+    minimumValue:0
+    maximumValue:10
+    sliderColor:UIColorFromHex(0xBD0000)
+  ];
 }
 
 
@@ -69,14 +84,14 @@ void setupMenu() {
   [menu setFrameworkName:NULL];
 
   menu = [[Menu alloc]  
-            initWithTitle:@"@@APPNAME@@ - Mod Menu"
+            initWithTitle:NSSENCRYPT("@@APPNAME@@ - Mod Menu")
             titleColor:[UIColor whiteColor]
-            titleFont:@"Copperplate-Bold"
-            credits:@"This Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!"
+            titleFont:NSSENCRYPT("Copperplate-Bold")
+            credits:NSSENCRYPT("This Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!")
             headerColor:UIColorFromHex(0xBD0000)
             switchOffColor:[UIColor darkGrayColor]
             switchOnColor:UIColorFromHex(0x00ADF2)
-            switchTitleFont:@"Copperplate-Bold"
+            switchTitleFont:NSSENCRYPT("Copperplate-Bold")
             switchTitleColor:[UIColor whiteColor]
             infoButtonColor:UIColorFromHex(0xBD0000)
             maxVisibleSwitches:4 // Less than max -> blank space, more than max -> you can scroll!
@@ -97,14 +112,14 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer, C
     SCLAlertView *alert = [[SCLAlertView alloc] initWithNewWindow];
 
     // Website link, remove it if you don't need it.
-    [alert addButton: @"Visit Me!" actionBlock: ^(void) {
-      [[UIApplication sharedApplication] openURL: [NSURL URLWithString: @"@@SITE@@"]];
+    [alert addButton: NSSENCRYPT("Visit Me!") actionBlock: ^(void) {
+      [[UIApplication sharedApplication] openURL: [NSURL URLWithString: NSSENCRYPT("@@SITE@@")]];
       timer(2) {
         setupMenu();
       });        
     }];
 
-    [alert addButton: @"Thankyou, understood." actionBlock: ^(void) {
+    [alert addButton: NSSENCRYPT("Thankyou, understood.") actionBlock: ^(void) {
       timer(2) {
         setupMenu();
       });
@@ -115,7 +130,7 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer, C
     alert.showAnimationType = SCLAlertViewShowAnimationSlideInFromCenter;   
     
     [alert showSuccess: nil
-            subTitle:@"@@APPNAME@@ - Mod Menu \n\nThis Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!" 
+            subTitle:NSSENCRYPT("@@APPNAME@@ - Mod Menu \n\nThis Mod Menu has been made by @@USER@@, do not share this without proper credits and my permission. \n\nEnjoy!") 
               closeButtonTitle:nil
                 duration:99999999.0f];
   });
