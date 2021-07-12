@@ -65,7 +65,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: "./Ted2's Mod Menu Template.nic.tar"
-        asset_name: "Ted2-Mod-Menu-Template.nic.tar"
+        asset_path: "./Ted2's Mod Menu Template v${{ env.VERSION }}.nic.tar"
+        asset_name: "Ted2-Mod-Menu-Template v${{ env.VERSION }}.nic.tar"
         asset_content_type: application/x-tar
           
