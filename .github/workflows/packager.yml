@@ -44,8 +44,8 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: "Ted2's Mod Menu Template.nic.tar"
-        path: "./Ted2's Mod Menu Template.nic.tar"
+        name: "Ted2's Mod Menu Template v${{ env.VERSION }}.nic.tar"
+        path: "./Ted2's Mod Menu Template v${{ env.VERSION }}.nic.tar"
         
     - name: Create Release
       id: create-release
