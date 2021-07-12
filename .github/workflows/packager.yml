@@ -38,7 +38,7 @@ jobs:
     - name: Make NIC package
       run: |
         source ~/.profile
-        rm ./Ted2's Mod Menu Template v${{ env.VERSION }}.nic.tar || true # To force it to not fail even if the file does not exist
+        rm ./iOS-Mod-Menu-Template-for-Theos.nic.tar || true # To force it to not fail even if the file does not exist
         $THEOS/bin/nicify.pl ./template
         
     - name: Upload artifact
