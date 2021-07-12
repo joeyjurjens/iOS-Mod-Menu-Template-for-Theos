@@ -33,7 +33,7 @@ jobs:
         rm -r master.zip $TMP
       
     - name: Get version
-      run: echo ::set-env name=VERSION::$(cat ./template/versionCheck.sh | sed -n 2p | tail -c 7 | head -c 5)
+      run: echo "VERSION=$(cat ./template/versionCheck.sh | sed -n 2p | tail -c 7 | head -c 5)" >> $GITHUB_ENV
 
     - name: Make NIC package
       run: |
