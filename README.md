@@ -162,10 +162,3 @@ float userValue2 = [[switches getValueFromSwitch:NSSENCRYPT("Switch Name Goes He
   * For contributions
 * [busmanl30](https://github.com/busmanl30)
   * For contributions
-
-<br>
-
-### Contact:
-If you need support, you may discord me. 
-However, please don't spam me and give me as much information you can when you do so.
-<br> **Discord:** Joey#0309
