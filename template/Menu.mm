@@ -292,10 +292,7 @@ void restoreLastSession() {
     frameworkName = name_;
 }
 
--(const char *)getFrameworkName {
-  BOOL didDo = NO;
-
-BOOL didDo = false;
+BOOL didDo = NO;
 
 -(const char *)getFrameworkName {
 
@@ -315,7 +312,6 @@ BOOL didDo = false;
    }
       return frameworkName;
 } 
-}
 @end // End of menu class!
 
 
