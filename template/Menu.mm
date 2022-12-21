@@ -293,7 +293,15 @@ void restoreLastSession() {
 }
 
 -(const char *)getFrameworkName {
-    return frameworkName;
+    if(frameworkName) return frameworkName; 
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath]; 
+    NSString *path = [bundlePath stringByAppendingString:@"/Frameworks/UnityFramework.framework/UnityFramework"];
+    if([fileManager fileExistsAtPath:path]) 
+    frameworkName = "UnityFramework"; 
+    else
+    frameworkName = NULL;
+    return frameworkName; 
 }
 @end // End of menu class!
 
