@@ -17,7 +17,7 @@ jobs:
         VERSION: ""
     - name: Install Theos
       run: |
-        sudo apt-get install fakeroot git perl clang-6.0 build-essential -y
+        sudo apt-get install fakeroot git perl clang build-essential -y
         echo "export THEOS=~/theos" >> ~/.profile
         source ~/.profile
         git clone --recursive https://github.com/theos/theos.git $THEOS
