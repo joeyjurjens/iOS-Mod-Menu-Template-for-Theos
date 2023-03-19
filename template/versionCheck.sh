@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION='0.9.3'
+VERSION='0.9.4'
 # Don't remove the above line. Serves as the version this script will fetch. Only update when a new version is out.
 
 ERROR='\033[1;31m[*] Error:\033[1;37m '
