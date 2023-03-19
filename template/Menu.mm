@@ -44,8 +44,8 @@ UIWindow *mainWindow;
 
 // init the menu
 // global variabls, extern in Macros.h
-Menu *menu = [[Menu alloc]init];
-Switches *switches = [[Switches alloc]init];
+Menu *menu = [Menu alloc];
+Switches *switches = [Switches alloc];
 
 
 -(id)initWithTitle:(NSString *)title_ titleColor:(UIColor *)titleColor_ titleFont:(NSString *)titleFont_ credits:(NSString *)credits_ headerColor:(UIColor *)headerColor_ switchOffColor:(UIColor *)switchOffColor_ switchOnColor:(UIColor *)switchOnColor_ switchTitleFont:(NSString *)switchTitleFont_ switchTitleColor:(UIColor *)switchTitleColor_ infoButtonColor:(UIColor *)infoButtonColor_ maxVisibleSwitches:(int)maxVisibleSwitches_ menuWidth:(CGFloat )menuWidth_ menuIcon:(NSString *)menuIconBase64_ menuButton:(NSString *)menuButtonBase64_ {
