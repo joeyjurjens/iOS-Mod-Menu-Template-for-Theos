@@ -6,22 +6,32 @@
 
 #include "MemoryBackup.hpp"
 
-
-MemoryBackup::MemoryBackup() {
+MemoryBackup::MemoryBackup()
+{
   _address = 0;
-  _size    = 0;
+  _size = 0;
   _orig_code.clear();
 }
 
-MemoryBackup::MemoryBackup(const char *fileName, uint64_t address, size_t backup_size) {
-  MemoryBackup();
+MemoryBackup::~MemoryBackup()
+{
+  // clean up
+  _orig_code.clear();
+}
+
+MemoryBackup::MemoryBackup(const char *fileName, uintptr_t address, size_t backup_size)
+{
+  _address = 0;
+  _size = 0;
+  _orig_code.clear();
 
   if (address == 0 || backup_size < 1)
     return;
 
-   _address = reinterpret_cast<void *>(KittyMemory::getAbsoluteAddress(fileName, address));
-   if(_address == NULL) return;
-  
+  _address = KittyMemory::getAbsoluteAddress(fileName, address);
+  if (!_address)
+    return;
+
   _size = backup_size;
 
   _orig_code.resize(backup_size);
@@ -30,15 +40,17 @@ MemoryBackup::MemoryBackup(const char *fileName, uint64_t address, size_t backup
   KittyMemory::memRead(&_orig_code[0], reinterpret_cast<const void *>(_address), backup_size);
 }
 
-
-MemoryBackup::MemoryBackup(uint64_t absolute_address, size_t backup_size) {
-  MemoryBackup();
+MemoryBackup::MemoryBackup(uintptr_t absolute_address, size_t backup_size)
+{
+  _address = 0;
+  _size = 0;
+  _orig_code.clear();
 
   if (absolute_address == 0 || backup_size < 1)
     return;
 
-   _address = reinterpret_cast<void *>(absolute_address);
-  
+  _address = absolute_address;
+
   _size = backup_size;
 
   _orig_code.resize(backup_size);
@@ -47,35 +59,38 @@ MemoryBackup::MemoryBackup(uint64_t absolute_address, size_t backup_size) {
   KittyMemory::memRead(&_orig_code[0], reinterpret_cast<const void *>(_address), backup_size);
 }
 
-   MemoryBackup::~MemoryBackup() {
-     // clean up
-     _orig_code.clear();
-   }
+bool MemoryBackup::isValid() const
+{
+  return (_address != 0 && _size > 0 && _orig_code.size() == _size);
+}
 
+size_t MemoryBackup::get_BackupSize() const
+{
+  return _size;
+}
 
-  bool MemoryBackup::isValid() const {
-    return (_address != 0 && _size > 0
-            && _orig_code.size() == _size);
-  }
+uintptr_t MemoryBackup::get_TargetAddress() const
+{
+  return _address;
+}
 
-  size_t MemoryBackup::get_BackupSize() const{
-    return _size;
-  }
+bool MemoryBackup::Restore()
+{
+  if (!isValid()) return false;
+  
+  return KittyMemory::memWrite(reinterpret_cast<void *>(_address), &_orig_code[0], _size) == KittyMemory::SUCCESS;
+}
 
-  void *MemoryBackup::get_TargetAddress() const{
-    return _address;
-  }
+std::string MemoryBackup::get_CurrBytes() const
+{
+  if (!isValid()) return "";
+  
+  return KittyMemory::read2HexStr(reinterpret_cast<const void *>(_address), _size);
+}
 
-  bool MemoryBackup::Restore() {
-    if (!isValid()) return false;
-    return KittyMemory::memWrite(reinterpret_cast<void *>(_address), &_orig_code[0], _size) == KittyMemory::SUCCESS;
-  }
-
-  std::string MemoryBackup::get_CurrBytes() {
-    if (!isValid()) 
-      _hexString = std::string("0xInvalid");
-      else 
-      _hexString = KittyMemory::read2HexStr(reinterpret_cast<const void *>(_address), _size);
-
-    return _hexString;
-  }
+std::string MemoryBackup::get_OrigBytes() const
+{
+  if (!isValid()) return "";
+  
+  return KittyMemory::read2HexStr(_orig_code.data(), _orig_code.size());
+}
