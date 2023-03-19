@@ -1,4 +1,4 @@
-name "Ted2's Mod Menu Template v0.9.4"
+name "Ted2's Mod Menu Template v1.0.0"
 prompt FILTER "Bundle filter" "com.company.appname"
 constrain file "control" to package
 constrain "theos" to link_theos

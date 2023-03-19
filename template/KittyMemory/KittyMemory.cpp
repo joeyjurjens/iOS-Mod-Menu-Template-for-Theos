@@ -140,11 +140,29 @@ namespace KittyMemory
     {
         MemoryFileInfo _info;
 
-        _info.index = 0,
-        _info.header = _dyld_get_image_header(0);
-        _info.name = _dyld_get_image_name(0);
-        _info.address = _dyld_get_image_vmaddr_slide(0);
-
+        // If no file name provided, KittyMemory will use this method.
+        // This method goes over all images and uses the first image
+        // that starts with "/private/var/containers/Bundle/Application"
+        // as taking the first one (at index 0) isn't reliable anymore with the
+        // palera1n jailbreak. This new approach seems decent enough to me
+        // as it's very unlikely that there's another image in the above path.
+        // Unless it's a Unity Framework game but that's where the
+        // getMemoryFileInfo method is for, where you would provide the file name.
+        std::string applicationsPath = "/private/var/containers/Bundle/Application";
+        for (uint32_t i = 0; i < _dyld_image_count(); i++)
+        {
+            const char *name = _dyld_get_image_name(i);
+            if (!name) continue;
+            std::string fullpath(name);
+            if (strncmp(fullpath.c_str(), applicationsPath.c_str(), applicationsPath.size()) == 0)
+            {
+                _info.index = i;
+                _info.header = _dyld_get_image_header(i);
+                _info.name = _dyld_get_image_name(i);
+                _info.address = _dyld_get_image_vmaddr_slide(i);
+                break;
+            }
+        }
         return _info;
     }
 
