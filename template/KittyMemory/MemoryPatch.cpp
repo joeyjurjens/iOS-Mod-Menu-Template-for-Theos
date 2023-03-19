@@ -6,129 +6,159 @@
 
 #include "MemoryPatch.hpp"
 
-
-MemoryPatch::MemoryPatch() {
+MemoryPatch::MemoryPatch()
+{
   _address = 0;
-  _size    = 0;
+  _size = 0;
   _orig_code.clear();
   _patch_code.clear();
 }
 
-MemoryPatch::MemoryPatch(uint64_t absolute_address,
-                         const void *patch_code, size_t patch_size) {
-    MemoryPatch();
-
-    if (absolute_address == 0 || patch_code == NULL || patch_size < 1)
-        return;
-
-    _address = reinterpret_cast<void *>(absolute_address);
-    _size    = patch_size;
-
-    _orig_code.resize(patch_size);
-    _patch_code.resize(patch_size);
-
-    // initialize patch & backup current content
-    KittyMemory::memRead(&_patch_code[0], patch_code, patch_size);
-    KittyMemory::memRead(&_orig_code[0], static_cast<const void *>(_address), patch_size);
+MemoryPatch::~MemoryPatch()
+{
+  // clean up
+  _orig_code.clear();
+  _patch_code.clear();
 }
 
-MemoryPatch::MemoryPatch(const char *fileName, uint64_t address,
-                         const void *patch_code, size_t patch_size) {
-    MemoryPatch();
+MemoryPatch::MemoryPatch(uintptr_t absolute_address,
+                         const void *patch_code, size_t patch_size)
+{
+  _address = 0;
+  _size = 0;
+  _orig_code.clear();
+  _patch_code.clear();
 
-    if (address == 0 || patch_code == NULL || patch_size < 1)
-        return;
+  if (absolute_address == 0 || !patch_code || patch_size < 1)
+    return;
 
-    _address = reinterpret_cast<void *>(KittyMemory::getAbsoluteAddress(fileName, address));
-    if(_address == NULL) return;
+  _address = absolute_address;
+  _size = patch_size;
 
-    _size = patch_size;
+  _orig_code.resize(patch_size);
+  _patch_code.resize(patch_size);
 
-    _orig_code.resize(patch_size);
-    _patch_code.resize(patch_size);
-
-    // initialize patch & backup current content
-    KittyMemory::memRead(&_patch_code[0], patch_code, patch_size);
-    KittyMemory::memRead(&_orig_code[0], reinterpret_cast<const void *>(_address), patch_size);
+  // initialize patch & backup current content
+  KittyMemory::memRead(&_patch_code[0], patch_code, patch_size);
+  KittyMemory::memRead(&_orig_code[0], reinterpret_cast<const void *>(_address), patch_size);
 }
 
-   MemoryPatch::~MemoryPatch() {
-     // clean up
-     _orig_code.clear();
-     _patch_code.clear();
-   }
+MemoryPatch::MemoryPatch(const char *fileName, uintptr_t address,
+                         const void *patch_code, size_t patch_size)
+{
+  _address = 0;
+  _size = 0;
+  _orig_code.clear();
+  _patch_code.clear();
 
+  if (address == 0 || !patch_code || patch_size < 1)
+    return;
 
-  MemoryPatch MemoryPatch::createWithHex(const char *fileName, uint64_t address, std::string hex) {
-    MemoryPatch patch;
+  _address = KittyMemory::getAbsoluteAddress(fileName, address);
+  if (_address == 0)
+    return;
 
-    if (address == 0 || !KittyUtils::validateHexString(hex))
-        return patch;
+  _size = patch_size;
 
-    patch._address = reinterpret_cast<void *>(KittyMemory::getAbsoluteAddress(fileName, address));
-    if(patch._address == NULL) return patch;
+  _orig_code.resize(patch_size);
+  _patch_code.resize(patch_size);
 
-    patch._size = hex.length() / 2;
+  // initialize patch & backup current content
+  KittyMemory::memRead(&_patch_code[0], patch_code, patch_size);
+  KittyMemory::memRead(&_orig_code[0], reinterpret_cast<const void *>(_address), patch_size);
+}
 
-    patch._orig_code.resize(patch._size);
-    patch._patch_code.resize(patch._size);
+MemoryPatch MemoryPatch::createWithHex(const char *fileName, uintptr_t address, std::string hex)
+{
+  MemoryPatch patch;
 
-    // initialize patch
-    KittyUtils::fromHex(hex, &patch._patch_code[0]);
-
-    // backup current content
-    KittyMemory::memRead(&patch._orig_code[0], reinterpret_cast<const void *>(patch._address), patch._size);
+  if (address == 0 || !KittyUtils::validateHexString(hex))
     return patch;
-  }
 
-  MemoryPatch MemoryPatch::createWithHex(uint64_t absolute_address, std::string hex) {
-    MemoryPatch patch;
-
-    if (absolute_address == 0 || !KittyUtils::validateHexString(hex))
-      return patch;
-
-    patch._address = reinterpret_cast<void *>(absolute_address);
-    patch._size    = hex.length() / 2;
-
-    patch._orig_code.resize(patch._size);
-    patch._patch_code.resize(patch._size);
-
-    // initialize patch
-    KittyUtils::fromHex(hex, &patch._patch_code[0]);
-
-    // backup current content
-    KittyMemory::memRead(&patch._orig_code[0], reinterpret_cast<const void *>(patch._address), patch._size);
+  patch._address = KittyMemory::getAbsoluteAddress(fileName, address);
+  if (patch._address == 0)
     return patch;
-  }
 
-  bool MemoryPatch::isValid() const {
-    return (_address != NULL && _size > 0
-            && _orig_code.size() == _size && _patch_code.size() == _size);
-  }
+  patch._size = hex.length() / 2;
 
-  size_t MemoryPatch::get_PatchSize() const{
-    return _size;
-  }
+  patch._orig_code.resize(patch._size);
+  patch._patch_code.resize(patch._size);
 
-  void *MemoryPatch::get_TargetAddress() const{
-    return _address;
-  }
+  // initialize patch
+  KittyUtils::fromHex(hex, &patch._patch_code[0]);
 
-  bool MemoryPatch::Restore() {
-    if (!isValid()) return false;
-    return KittyMemory::memWrite(_address, &_orig_code[0], _size) == KittyMemory::SUCCESS;
-  }
+  // backup current content
+  KittyMemory::memRead(&patch._orig_code[0], reinterpret_cast<const void *>(patch._address), patch._size);
+  return patch;
+}
 
-  bool MemoryPatch::Modify() {
-    if (!isValid()) return false;
-    return (KittyMemory::memWrite(_address, &_patch_code[0], _size) ==  KittyMemory::SUCCESS);
-  }
+MemoryPatch MemoryPatch::createWithHex(uintptr_t absolute_address, std::string hex)
+{
+  MemoryPatch patch;
 
-  std::string MemoryPatch::get_CurrBytes() {
-    if (!isValid())
-      _hexString = std::string("0xInvalid");
-      else
-      _hexString = KittyMemory::read2HexStr(reinterpret_cast<const void *>(_address), _size);
+  if (absolute_address == 0 || !KittyUtils::validateHexString(hex))
+    return patch;
 
-    return _hexString;
-  }
+  patch._address = absolute_address;
+  patch._size = hex.length() / 2;
+
+  patch._orig_code.resize(patch._size);
+  patch._patch_code.resize(patch._size);
+
+  // initialize patch
+  KittyUtils::fromHex(hex, &patch._patch_code[0]);
+
+  // backup current content
+  KittyMemory::memRead(&patch._orig_code[0], reinterpret_cast<const void *>(patch._address), patch._size);
+  return patch;
+}
+
+bool MemoryPatch::isValid() const
+{
+  return (_address != 0 && _size > 0 && _orig_code.size() == _size && _patch_code.size() == _size);
+}
+
+size_t MemoryPatch::get_PatchSize() const
+{
+  return _size;
+}
+
+uintptr_t MemoryPatch::get_TargetAddress() const
+{
+  return _address;
+}
+
+bool MemoryPatch::Restore()
+{
+  if (!isValid()) return false;
+
+  return KittyMemory::memWrite(reinterpret_cast<void *>(_address), &_orig_code[0], _size) == KittyMemory::SUCCESS;
+}
+
+bool MemoryPatch::Modify()
+{
+  if (!isValid()) return false;
+
+  return (KittyMemory::memWrite(reinterpret_cast<void *>(_address), &_patch_code[0], _size) == KittyMemory::SUCCESS);
+}
+
+std::string MemoryPatch::get_CurrBytes() const
+{
+  if (!isValid()) return "";
+  
+  return KittyMemory::read2HexStr(reinterpret_cast<const void *>(_address), _size);
+}
+
+std::string MemoryPatch::get_OrigBytes() const
+{
+  if (!isValid()) return "";
+  
+  return KittyMemory::read2HexStr(_orig_code.data(), _orig_code.size());
+}
+
+std::string MemoryPatch::get_PatchBytes() const
+{
+  if (!isValid()) return "";
+  
+  return KittyMemory::read2HexStr(_patch_code.data(), _patch_code.size());
+}

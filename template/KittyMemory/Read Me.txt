@@ -1,6 +1,0 @@
-KittyMemory is NOT made by me, it's made by Ruit.
-
-I just implemented it in my menu.
-
-KittyMemory is open source & can be found on github:
-- https://github.com/MJx0/KittyMemory
