@@ -7,6 +7,13 @@ FOR_RELEASE = 1
 # 0 to treat warnings as errors, 1 otherwise.
 IGNORE_WARNINGS=0
 
+# 0 to compile for rootful jailbreaks, 1 otherwise.
+ROOTLESS = 0
+
+ifeq ($(ROOTLESS), 1)
+THEOS_PACKAGE_SCHEME = rootless
+endif 
+
 # only set this  to 1 if you are on mobile theos
 # assuming you have an sdk at your theos sdks directory
 # this will include c++ headers and other needed headers for your project so you don't need to manually include them or something like that
